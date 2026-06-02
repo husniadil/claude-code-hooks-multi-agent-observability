@@ -1,5 +1,6 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import type { HookEvent, WebSocketMessage } from '../types';
+import { insertEventSorted } from '../utils/eventOrdering';
 
 export function useWebSocket(url: string) {
   const events = ref<HookEvent[]>([]);
@@ -32,13 +33,9 @@ export function useWebSocket(url: string) {
             events.value = initialEvents.slice(-maxEvents);
           } else if (message.type === 'event') {
             const newEvent = message.data as HookEvent;
-            // Insert keeping ascending timestamp order. Async hooks can deliver
-            // POSTs slightly out of fire-order, so scan back from the end (the
-            // common case is a plain append) to drop the event into place.
-            const ts = newEvent.timestamp ?? 0;
-            let i = events.value.length;
-            while (i > 0 && (events.value[i - 1].timestamp ?? 0) > ts) i--;
-            events.value.splice(i, 0, newEvent);
+            // Keep events in ascending timestamp order; async hooks can deliver
+            // POSTs slightly out of fire-order. See insertEventSorted.
+            insertEventSorted(events.value, newEvent);
 
             // Limit events array to maxEvents, removing the oldest when exceeded
             if (events.value.length > maxEvents) {
