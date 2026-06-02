@@ -84,19 +84,22 @@ button:focus-visible {
   body {
     place-items: stretch; /* Allow full width on mobile */
   }
-  
+
   #app {
     max-width: none; /* Remove max-width constraint on mobile */
     padding: 0; /* Remove default padding on mobile */
     text-align: left; /* Left-align text on mobile for better readability */
   }
-  
+
   /* Improve touch targets on mobile */
-  button, select, input[type="button"], input[type="submit"] {
+  button,
+  select,
+  input[type='button'],
+  input[type='submit'] {
     min-height: 44px;
     min-width: 44px;
   }
-  
+
   /* Optimize text selection on mobile */
   * {
     -webkit-tap-highlight-color: transparent;

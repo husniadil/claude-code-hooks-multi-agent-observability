@@ -1,16 +1,16 @@
 import { ref, computed, onMounted, readonly } from 'vue';
 import { API_BASE_URL } from '../config';
-import type { 
-  ThemeName, 
-  CustomTheme, 
-  PredefinedTheme, 
-  ThemeState, 
+import type {
+  ThemeName,
+  CustomTheme,
+  PredefinedTheme,
+  ThemeState,
   ThemeManagerState,
   CreateThemeFormData,
   ThemeColors,
   ThemeValidationResult,
   ThemeImportExport,
-  ThemeApiResponse
+  ThemeApiResponse,
 } from '../types/theme';
 import { PREDEFINED_THEME_NAMES, COLOR_REGEX, RGBA_REGEX } from '../types/theme';
 
@@ -46,8 +46,8 @@ const PREDEFINED_THEMES: Record<ThemeName, PredefinedTheme> = {
       shadowLg: 'rgba(20, 20, 19, 0.10)',
       hoverBg: 'rgba(20, 20, 19, 0.04)',
       activeBg: 'rgba(20, 20, 19, 0.08)',
-      focusRing: '#cc785c'
-    }
+      focusRing: '#cc785c',
+    },
   },
   light: {
     name: 'light',
@@ -79,8 +79,8 @@ const PREDEFINED_THEMES: Record<ThemeName, PredefinedTheme> = {
       shadowLg: 'rgba(0, 0, 0, 0.25)',
       hoverBg: 'rgba(0, 0, 0, 0.05)',
       activeBg: 'rgba(0, 0, 0, 0.1)',
-      focusRing: '#3b82f6'
-    }
+      focusRing: '#3b82f6',
+    },
   },
   dark: {
     name: 'dark',
@@ -112,8 +112,8 @@ const PREDEFINED_THEMES: Record<ThemeName, PredefinedTheme> = {
       shadowLg: 'rgba(0, 0, 0, 0.75)',
       hoverBg: 'rgba(255, 255, 255, 0.05)',
       activeBg: 'rgba(255, 255, 255, 0.1)',
-      focusRing: '#60a5fa'
-    }
+      focusRing: '#60a5fa',
+    },
   },
   modern: {
     name: 'modern',
@@ -145,8 +145,8 @@ const PREDEFINED_THEMES: Record<ThemeName, PredefinedTheme> = {
       shadowLg: 'rgba(15, 23, 42, 0.25)',
       hoverBg: 'rgba(15, 23, 42, 0.05)',
       activeBg: 'rgba(15, 23, 42, 0.1)',
-      focusRing: '#0ea5e9'
-    }
+      focusRing: '#0ea5e9',
+    },
   },
   earth: {
     name: 'earth',
@@ -178,8 +178,8 @@ const PREDEFINED_THEMES: Record<ThemeName, PredefinedTheme> = {
       shadowLg: 'rgba(139, 69, 19, 0.3)',
       hoverBg: 'rgba(139, 69, 19, 0.08)',
       activeBg: 'rgba(139, 69, 19, 0.15)',
-      focusRing: '#8b4513'
-    }
+      focusRing: '#8b4513',
+    },
   },
   glass: {
     name: 'glass',
@@ -211,8 +211,8 @@ const PREDEFINED_THEMES: Record<ThemeName, PredefinedTheme> = {
       shadowLg: 'rgba(147, 112, 219, 0.4)',
       hoverBg: 'rgba(147, 112, 219, 0.1)',
       activeBg: 'rgba(147, 112, 219, 0.2)',
-      focusRing: '#9370db'
-    }
+      focusRing: '#9370db',
+    },
   },
   'high-contrast': {
     name: 'high-contrast',
@@ -244,8 +244,8 @@ const PREDEFINED_THEMES: Record<ThemeName, PredefinedTheme> = {
       shadowLg: 'rgba(0, 0, 0, 0.6)',
       hoverBg: 'rgba(0, 0, 0, 0.1)',
       activeBg: 'rgba(0, 0, 0, 0.2)',
-      focusRing: '#000000'
-    }
+      focusRing: '#000000',
+    },
   },
   'dark-blue': {
     name: 'dark-blue',
@@ -277,8 +277,8 @@ const PREDEFINED_THEMES: Record<ThemeName, PredefinedTheme> = {
       shadowLg: 'rgba(0, 0, 51, 0.9)',
       hoverBg: 'rgba(0, 153, 255, 0.15)',
       activeBg: 'rgba(0, 153, 255, 0.25)',
-      focusRing: '#0099ff'
-    }
+      focusRing: '#0099ff',
+    },
   },
   'colorblind-friendly': {
     name: 'colorblind-friendly',
@@ -310,8 +310,8 @@ const PREDEFINED_THEMES: Record<ThemeName, PredefinedTheme> = {
       shadowLg: 'rgba(51, 17, 34, 0.3)',
       hoverBg: 'rgba(153, 51, 102, 0.08)',
       activeBg: 'rgba(153, 51, 102, 0.15)',
-      focusRing: '#993366'
-    }
+      focusRing: '#993366',
+    },
   },
   ocean: {
     name: 'ocean',
@@ -343,8 +343,8 @@ const PREDEFINED_THEMES: Record<ThemeName, PredefinedTheme> = {
       shadowLg: 'rgba(0, 136, 204, 0.3)',
       hoverBg: 'rgba(0, 136, 204, 0.08)',
       activeBg: 'rgba(0, 136, 204, 0.15)',
-      focusRing: '#0088cc'
-    }
+      focusRing: '#0088cc',
+    },
   },
   'midnight-purple': {
     name: 'midnight-purple',
@@ -376,8 +376,8 @@ const PREDEFINED_THEMES: Record<ThemeName, PredefinedTheme> = {
       shadowLg: 'rgba(0, 0, 0, 0.8)',
       hoverBg: 'rgba(167, 139, 250, 0.1)',
       activeBg: 'rgba(167, 139, 250, 0.2)',
-      focusRing: '#a78bfa'
-    }
+      focusRing: '#a78bfa',
+    },
   },
   'sunset-orange': {
     name: 'sunset-orange',
@@ -409,8 +409,8 @@ const PREDEFINED_THEMES: Record<ThemeName, PredefinedTheme> = {
       shadowLg: 'rgba(218, 74, 13, 0.3)',
       hoverBg: 'rgba(234, 88, 12, 0.08)',
       activeBg: 'rgba(234, 88, 12, 0.15)',
-      focusRing: '#ea580c'
-    }
+      focusRing: '#ea580c',
+    },
   },
   'mint-fresh': {
     name: 'mint-fresh',
@@ -442,9 +442,9 @@ const PREDEFINED_THEMES: Record<ThemeName, PredefinedTheme> = {
       shadowLg: 'rgba(13, 148, 136, 0.25)',
       hoverBg: 'rgba(13, 148, 136, 0.08)',
       activeBg: 'rgba(13, 148, 136, 0.15)',
-      focusRing: '#0d9488'
-    }
-  }
+      focusRing: '#0d9488',
+    },
+  },
 };
 
 export function useThemes() {
@@ -454,20 +454,20 @@ export function useThemes() {
     customThemes: [],
     isCustomTheme: false,
     isLoading: false,
-    error: null
+    error: null,
   });
 
   const managerState = ref<ThemeManagerState>({
     isOpen: false,
     activeTab: 'predefined',
     previewTheme: null,
-    editingTheme: null
+    editingTheme: null,
   });
 
   // Computed properties
   const currentThemeData = computed(() => {
     if (state.value.isCustomTheme) {
-      return state.value.customThemes.find(t => t.id === state.value.currentTheme);
+      return state.value.customThemes.find((t) => t.id === state.value.currentTheme);
     }
     return PREDEFINED_THEMES[state.value.currentTheme as ThemeName];
   });
@@ -477,9 +477,9 @@ export function useThemes() {
   // Core theme management
   const setTheme = (theme: ThemeName | string) => {
     const isCustom = !PREDEFINED_THEME_NAMES.includes(theme as ThemeName);
-    
+
     if (isCustom) {
-      const customTheme = state.value.customThemes.find(t => t.id === theme);
+      const customTheme = state.value.customThemes.find((t) => t.id === theme);
       if (!customTheme) {
         console.error(`Custom theme not found: ${theme}`);
         return;
@@ -491,7 +491,7 @@ export function useThemes() {
 
     state.value.currentTheme = theme;
     state.value.isCustomTheme = isCustom;
-    
+
     // Save to localStorage
     localStorage.setItem('theme', theme);
     localStorage.setItem('isCustomTheme', isCustom.toString());
@@ -499,14 +499,16 @@ export function useThemes() {
 
   const applyPredefinedTheme = (themeName: ThemeName) => {
     // Remove all theme classes (including those with hyphens)
-    document.documentElement.className = document.documentElement.className
-      .replace(/theme-[\w-]+/g, '');
-    
+    document.documentElement.className = document.documentElement.className.replace(
+      /theme-[\w-]+/g,
+      '',
+    );
+
     // Add new theme class
     const themeData = PREDEFINED_THEMES[themeName];
     if (themeData) {
       document.documentElement.classList.add(themeData.cssClass);
-      
+
       // For backward compatibility with existing dark mode
       if (themeName === 'dark') {
         document.documentElement.classList.add('dark');
@@ -518,16 +520,18 @@ export function useThemes() {
 
   const applyCustomTheme = (theme: CustomTheme) => {
     // Remove all theme classes (including those with hyphens)
-    document.documentElement.className = document.documentElement.className
-      .replace(/theme-[\w-]+/g, '');
-    
+    document.documentElement.className = document.documentElement.className.replace(
+      /theme-[\w-]+/g,
+      '',
+    );
+
     // Apply custom CSS variables
     const root = document.documentElement;
     Object.entries(theme.colors).forEach(([key, value]) => {
       const cssVar = camelToKebab(key);
       root.style.setProperty(`--theme-${cssVar}`, value);
     });
-    
+
     // Add custom theme class
     root.classList.add('theme-custom');
   };
@@ -552,14 +556,16 @@ export function useThemes() {
     if (colors.textPrimary && colors.bgPrimary) {
       const contrast = calculateContrast(colors.textPrimary, colors.bgPrimary);
       if (contrast < 4.5) {
-        warnings.push('Primary text and background may not meet accessibility contrast requirements');
+        warnings.push(
+          'Primary text and background may not meet accessibility contrast requirements',
+        );
       }
     }
 
     return {
       isValid: errors.length === 0,
       errors,
-      warnings
+      warnings,
     };
   };
 
@@ -581,7 +587,7 @@ export function useThemes() {
       isPublic: formData.isPublic,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      tags: formData.tags
+      tags: formData.tags,
     };
 
     // Save locally
@@ -601,23 +607,23 @@ export function useThemes() {
   };
 
   const updateCustomTheme = (themeId: string, updates: Partial<CustomTheme>) => {
-    const index = state.value.customThemes.findIndex(t => t.id === themeId);
+    const index = state.value.customThemes.findIndex((t) => t.id === themeId);
     if (index !== -1) {
       state.value.customThemes[index] = {
         ...state.value.customThemes[index],
         ...updates,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
       saveCustomThemes();
     }
   };
 
   const deleteCustomTheme = (themeId: string) => {
-    const index = state.value.customThemes.findIndex(t => t.id === themeId);
+    const index = state.value.customThemes.findIndex((t) => t.id === themeId);
     if (index !== -1) {
       state.value.customThemes.splice(index, 1);
       saveCustomThemes();
-      
+
       // Switch to default theme if current theme was deleted
       if (state.value.currentTheme === themeId) {
         setTheme('light');
@@ -627,21 +633,21 @@ export function useThemes() {
 
   // Import/Export
   const exportTheme = (themeId: string): ThemeImportExport | null => {
-    const theme = state.value.customThemes.find(t => t.id === themeId);
+    const theme = state.value.customThemes.find((t) => t.id === themeId);
     if (!theme) return null;
 
     return {
       version: '1.0.0',
       theme,
       exportedAt: new Date().toISOString(),
-      exportedBy: 'observability-system'
+      exportedBy: 'observability-system',
     };
   };
 
   const importTheme = (importData: ThemeImportExport): boolean => {
     try {
       const theme = importData.theme;
-      
+
       // Validate theme structure
       const validation = validateTheme(theme.colors);
       if (!validation.isValid) {
@@ -654,7 +660,7 @@ export function useThemes() {
         ...theme,
         id: generateId(),
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
 
       state.value.customThemes.push(newTheme);
@@ -671,7 +677,7 @@ export function useThemes() {
     const response = await fetch(`${API_BASE_URL}/api/themes`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(theme)
+      body: JSON.stringify(theme),
     });
 
     if (!response.ok) {
@@ -684,13 +690,13 @@ export function useThemes() {
     try {
       const response = await fetch(`${API_BASE_URL}/api/themes?isPublic=true`);
       if (!response.ok) return [];
-      
+
       const result: ThemeApiResponse<CustomTheme[]> = await response.json();
       if (result.success && result.data) {
         // Convert server themes to custom theme format
-        return result.data.map(theme => ({
+        return result.data.map((theme) => ({
           ...theme,
-          isCustom: true
+          isCustom: true,
         }));
       }
       return [];
@@ -699,7 +705,6 @@ export function useThemes() {
       return [];
     }
   };
-
 
   // Utility functions
   const camelToKebab = (str: string) => {
@@ -740,10 +745,10 @@ export function useThemes() {
   // Initialization
   const initializeTheme = () => {
     loadCustomThemes();
-    
+
     // Load saved theme
     const savedTheme = localStorage.getItem('theme');
-    
+
     if (savedTheme) {
       setTheme(savedTheme);
     } else {
@@ -769,7 +774,7 @@ export function useThemes() {
 
   const previewTheme = (theme: ThemeName | CustomTheme) => {
     managerState.value.previewTheme = theme;
-    
+
     // Apply preview temporarily
     if (typeof theme === 'string') {
       applyPredefinedTheme(theme);
@@ -780,10 +785,10 @@ export function useThemes() {
 
   const cancelPreview = () => {
     managerState.value.previewTheme = null;
-    
+
     // Restore current theme
     if (state.value.isCustomTheme) {
-      const customTheme = state.value.customThemes.find(t => t.id === state.value.currentTheme);
+      const customTheme = state.value.customThemes.find((t) => t.id === state.value.currentTheme);
       if (customTheme) {
         applyCustomTheme(customTheme);
       }
@@ -794,10 +799,11 @@ export function useThemes() {
 
   const applyPreview = () => {
     if (managerState.value.previewTheme) {
-      const theme = typeof managerState.value.previewTheme === 'string' 
-        ? managerState.value.previewTheme 
-        : managerState.value.previewTheme.id;
-      
+      const theme =
+        typeof managerState.value.previewTheme === 'string'
+          ? managerState.value.previewTheme
+          : managerState.value.previewTheme.id;
+
       setTheme(theme);
       managerState.value.previewTheme = null;
     }
@@ -812,24 +818,24 @@ export function useThemes() {
     // State
     state: readonly(state),
     managerState,
-    
+
     // Computed
     currentThemeData,
     predefinedThemes,
-    
+
     // Core functions
     setTheme,
     validateTheme,
-    
+
     // Custom theme management
     createCustomTheme,
     updateCustomTheme,
     deleteCustomTheme,
-    
+
     // Import/Export
     exportTheme,
     importTheme,
-    
+
     // Manager functions
     openThemeManager,
     closeThemeManager,
@@ -837,11 +843,11 @@ export function useThemes() {
     previewTheme,
     cancelPreview,
     applyPreview,
-    
+
     // Server functions
     loadThemesFromServer,
-    
+
     // Utility
-    initializeTheme
+    initializeTheme,
   };
 }

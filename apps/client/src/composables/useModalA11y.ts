@@ -29,8 +29,9 @@ export function useModalA11y(
   const focusableItems = (): HTMLElement[] => {
     const el = containerRef.value;
     if (!el) return [];
-    return Array.from(el.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR))
-      .filter((node) => node.offsetParent !== null);
+    return Array.from(el.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
+      (node) => node.offsetParent !== null,
+    );
   };
 
   const onKeydown = (e: KeyboardEvent) => {

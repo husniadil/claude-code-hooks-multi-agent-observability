@@ -1,6 +1,19 @@
 // Theme type definitions
 
-export type ThemeName = 'anthropic' | 'light' | 'dark' | 'modern' | 'earth' | 'glass' | 'high-contrast' | 'dark-blue' | 'colorblind-friendly' | 'ocean' | 'midnight-purple' | 'sunset-orange' | 'mint-fresh';
+export type ThemeName =
+  | 'anthropic'
+  | 'light'
+  | 'dark'
+  | 'modern'
+  | 'earth'
+  | 'glass'
+  | 'high-contrast'
+  | 'dark-blue'
+  | 'colorblind-friendly'
+  | 'ocean'
+  | 'midnight-purple'
+  | 'sunset-orange'
+  | 'mint-fresh';
 
 export interface ThemeColors {
   // Primary colors
@@ -8,34 +21,34 @@ export interface ThemeColors {
   primaryHover: string;
   primaryLight: string;
   primaryDark: string;
-  
+
   // Background colors
   bgPrimary: string;
   bgSecondary: string;
   bgTertiary: string;
   bgQuaternary: string;
-  
+
   // Text colors
   textPrimary: string;
   textSecondary: string;
   textTertiary: string;
   textQuaternary: string;
-  
+
   // Border colors
   borderPrimary: string;
   borderSecondary: string;
   borderTertiary: string;
-  
+
   // Accent colors
   accentSuccess: string;
   accentWarning: string;
   accentError: string;
   accentInfo: string;
-  
+
   // Shadow colors
   shadow: string;
   shadowLg: string;
-  
+
   // Interactive states
   hoverBg: string;
   activeBg: string;

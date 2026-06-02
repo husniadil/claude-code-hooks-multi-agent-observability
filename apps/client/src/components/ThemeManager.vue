@@ -20,16 +20,21 @@
         @click.stop
       >
         <!-- Header -->
-        <div class="flex-shrink-0 bg-[var(--theme-bg-primary)] border-b border-[var(--theme-border-primary)] p-5">
+        <div
+          class="flex-shrink-0 bg-[var(--theme-bg-primary)] border-b border-[var(--theme-border-primary)] p-5"
+        >
           <div class="flex items-center justify-between">
-            <h2 id="theme-manager-title" class="inline-flex items-center gap-2 font-display text-2xl leading-none text-[var(--theme-text-primary)] tracking-tight">
+            <h2
+              id="theme-manager-title"
+              class="inline-flex items-center gap-2 font-display text-2xl leading-none text-[var(--theme-text-primary)] tracking-tight"
+            >
               <Palette :size="20" :stroke-width="1.75" class="text-[var(--theme-text-tertiary)]" />
               Themes
             </h2>
             <button
-              @click="close"
               class="p-2 rounded-lg text-[var(--theme-text-tertiary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] transition-colors"
               aria-label="Close"
+              @click="close"
             >
               <X :size="20" :stroke-width="2" />
             </button>
@@ -43,16 +48,18 @@
             <div
               v-for="theme in predefinedThemes"
               :key="theme.name"
-              @click="selectTheme(theme.name)"
               :class="[
                 'cursor-pointer rounded-xl border p-4 transition-colors bg-[var(--theme-bg-primary)]',
                 currentTheme === theme.name
                   ? 'border-[var(--theme-primary)] ring-1 ring-[var(--theme-primary)]/30'
-                  : 'border-[var(--theme-border-primary)] hover:border-[var(--theme-border-secondary)]'
+                  : 'border-[var(--theme-border-primary)] hover:border-[var(--theme-border-secondary)]',
               ]"
+              @click="selectTheme(theme.name)"
             >
               <!-- Theme Preview -->
-              <div class="flex h-14 rounded-lg overflow-hidden mb-3 border border-[var(--theme-border-primary)]">
+              <div
+                class="flex h-14 rounded-lg overflow-hidden mb-3 border border-[var(--theme-border-primary)]"
+              >
                 <div class="flex-1" :style="{ backgroundColor: theme.preview.primary }"></div>
                 <div class="flex-1" :style="{ backgroundColor: theme.preview.secondary }"></div>
                 <div class="flex-1" :style="{ backgroundColor: theme.preview.accent }"></div>
@@ -60,7 +67,9 @@
 
               <!-- Theme Info -->
               <div class="flex items-center justify-between gap-2">
-                <h3 class="font-medium text-[var(--theme-text-primary)]">{{ theme.displayName }}</h3>
+                <h3 class="font-medium text-[var(--theme-text-primary)]">
+                  {{ theme.displayName }}
+                </h3>
                 <span
                   v-if="currentTheme === theme.name"
                   class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-[var(--theme-accent-success)]/15 text-[var(--theme-accent-success)]"
@@ -73,13 +82,15 @@
           </div>
 
           <!-- Actions -->
-          <div class="flex justify-between items-center pt-4 border-t border-[var(--theme-border-primary)]">
+          <div
+            class="flex justify-between items-center pt-4 border-t border-[var(--theme-border-primary)]"
+          >
             <div class="text-sm text-[var(--theme-text-tertiary)]">
               {{ predefinedThemes.length }} themes available
             </div>
             <button
-              @click="close"
               class="px-4 py-2 border border-[var(--theme-border-primary)] text-[var(--theme-text-secondary)] rounded-lg hover:bg-[var(--theme-hover-bg)] hover:text-[var(--theme-text-primary)] transition-colors"
+              @click="close"
             >
               Close
             </button>

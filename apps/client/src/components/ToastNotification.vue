@@ -4,21 +4,20 @@
       v-if="isVisible"
       class="fixed left-1/2 -translate-x-1/2 z-50 flex items-center gap-2.5 pl-3 pr-1.5 py-2 bg-[var(--theme-bg-primary)] text-[var(--theme-text-primary)] rounded-lg border border-[var(--theme-border-primary)] transition-all duration-300"
       :style="{
-        top: `${16 + (index * 56)}px`,
-        boxShadow: '0 6px 20px -6px rgba(20, 20, 19, 0.18)'
+        top: `${16 + index * 56}px`,
+        boxShadow: '0 6px 20px -6px rgba(20, 20, 19, 0.18)',
       }"
     >
-      <span
-        class="w-2 h-2 rounded-full shrink-0"
-        :style="{ backgroundColor: agentColor }"
-      ></span>
+      <span class="w-2 h-2 rounded-full shrink-0" :style="{ backgroundColor: agentColor }"></span>
       <span class="text-sm">
-        New agent <span class="font-mono font-medium text-[var(--theme-text-primary)]">{{ agentName }}</span> joined
+        New agent
+        <span class="font-mono font-medium text-[var(--theme-text-primary)]">{{ agentName }}</span>
+        joined
       </span>
       <button
-        @click="dismiss"
         class="ml-1 p-1 rounded text-[var(--theme-text-quaternary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] transition-colors"
         aria-label="Dismiss notification"
+        @click="dismiss"
       >
         <X :size="15" :stroke-width="2" />
       </button>

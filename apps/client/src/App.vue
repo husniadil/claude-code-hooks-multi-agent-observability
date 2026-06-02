@@ -1,12 +1,16 @@
 <template>
   <div class="h-screen flex flex-col bg-[var(--theme-bg-secondary)]">
     <!-- Top navigation — cream canvas, hairline rule, color-block first -->
-    <header class="short:hidden bg-[var(--theme-bg-primary)] border-b border-[var(--theme-border-primary)]">
+    <header
+      class="short:hidden bg-[var(--theme-bg-primary)] border-b border-[var(--theme-border-primary)]"
+    >
       <div class="px-5 py-3 mobile:py-2 mobile:px-3 flex items-center justify-between gap-3">
         <!-- Brand -->
         <div class="flex items-center gap-2.5 min-w-0">
           <SpikeMark class="w-4 h-4 text-[var(--theme-primary)] shrink-0" />
-          <h1 class="font-display text-2xl mobile:text-lg leading-none text-[var(--theme-text-primary)] tracking-tight truncate">
+          <h1
+            class="font-display text-2xl mobile:text-lg leading-none text-[var(--theme-text-primary)] tracking-tight truncate"
+          >
             Observability
           </h1>
         </div>
@@ -14,7 +18,9 @@
         <!-- Right cluster -->
         <div class="flex items-center gap-2 mobile:gap-1.5">
           <!-- Connection status -->
-          <div class="flex items-center gap-1.5 px-2.5 py-1 mobile:px-2 rounded-full border border-[var(--theme-border-primary)]">
+          <div
+            class="flex items-center gap-1.5 px-2.5 py-1 mobile:px-2 rounded-full border border-[var(--theme-border-primary)]"
+          >
             <span class="relative flex h-2 w-2">
               <span
                 v-if="isConnected"
@@ -23,7 +29,11 @@
               ></span>
               <span
                 class="relative inline-flex rounded-full h-2 w-2"
-                :style="{ backgroundColor: isConnected ? 'var(--theme-accent-success)' : 'var(--theme-accent-error)' }"
+                :style="{
+                  backgroundColor: isConnected
+                    ? 'var(--theme-accent-success)'
+                    : 'var(--theme-accent-error)',
+                }"
               ></span>
             </span>
             <span class="text-xs font-medium text-[var(--theme-text-tertiary)] mobile:hidden">
@@ -32,31 +42,33 @@
           </div>
 
           <!-- Event count -->
-          <span class="text-xs font-medium font-mono text-[var(--theme-text-secondary)] bg-[var(--theme-bg-tertiary)] px-2.5 py-1 rounded-full tabular-nums">
+          <span
+            class="text-xs font-medium font-mono text-[var(--theme-text-secondary)] bg-[var(--theme-bg-tertiary)] px-2.5 py-1 rounded-full tabular-nums"
+          >
             {{ events.length }}
           </span>
 
           <div class="w-px h-5 bg-[var(--theme-border-primary)] mx-0.5 mobile:hidden"></div>
 
           <!-- Icon actions -->
-          <button @click="handleClearClick" class="nav-icon-btn" title="Clear events">
+          <button class="nav-icon-btn" title="Clear events" @click="handleClearClick">
             <Trash2 :size="17" :stroke-width="1.75" />
           </button>
           <button
-            @click="showFilters = !showFilters"
             class="nav-icon-btn"
             :class="{ 'nav-icon-btn--active': showFilters }"
             :title="showFilters ? 'Hide filters' : 'Show filters'"
+            @click="showFilters = !showFilters"
           >
             <SlidersHorizontal :size="17" :stroke-width="1.75" />
           </button>
-          <button @click="handleThemeManagerClick" class="nav-icon-btn" title="Open theme manager">
+          <button class="nav-icon-btn" title="Open theme manager" @click="handleThemeManagerClick">
             <Palette :size="17" :stroke-width="1.75" />
           </button>
         </div>
       </div>
     </header>
-    
+
     <!-- Filters -->
     <FilterPanel
       v-if="showFilters"
@@ -64,7 +76,7 @@
       :filters="filters"
       @update:filters="filters = $event"
     />
-    
+
     <!-- Live Pulse Chart -->
     <LivePulseChart
       :events="events"
@@ -75,7 +87,10 @@
     />
 
     <!-- Agent Swim Lane Container (below pulse chart, full width, hidden when empty) -->
-    <div v-if="selectedAgentLanes.length > 0" class="w-full bg-[var(--theme-bg-secondary)] px-3 py-4 mobile:px-2 mobile:py-2 overflow-hidden">
+    <div
+      v-if="selectedAgentLanes.length > 0"
+      class="w-full bg-[var(--theme-bg-secondary)] px-3 py-4 mobile:px-2 mobile:py-2 overflow-hidden"
+    >
       <AgentSwimLaneContainer
         :selected-agents="selectedAgentLanes"
         :events="events"
@@ -83,26 +98,26 @@
         @update:selected-agents="selectedAgentLanes = $event"
       />
     </div>
-    
+
     <!-- Timeline -->
     <div class="flex flex-col flex-1 overflow-hidden">
       <EventTimeline
+        v-model:stick-to-bottom="stickToBottom"
         :events="events"
         :filters="filters"
         :unique-app-names="uniqueAppNames"
         :all-app-names="allAppNames"
-        v-model:stick-to-bottom="stickToBottom"
         @select-agent="toggleAgentLane"
       />
     </div>
-    
+
     <!-- Stick to bottom button -->
     <StickScrollButton
       class="short:hidden"
       :stick-to-bottom="stickToBottom"
       @toggle="stickToBottom = !stickToBottom"
     />
-    
+
     <!-- Error message -->
     <div
       v-if="error"
@@ -112,12 +127,9 @@
       <AlertTriangle :size="15" :stroke-width="1.75" class="shrink-0" />
       {{ error }}
     </div>
-    
+
     <!-- Theme Manager -->
-    <ThemeManager
-      :is-open="showThemeManager"
-      @close="showThemeManager = false"
-    />
+    <ThemeManager :is-open="showThemeManager" @close="showThemeManager = false" />
 
     <!-- Toast Notifications -->
     <ToastNotification
@@ -161,7 +173,7 @@ const { getHexColorForApp } = useEventColors();
 const filters = ref({
   sourceApp: '',
   sessionId: '',
-  eventType: ''
+  eventType: '',
 });
 
 // UI state
@@ -184,24 +196,28 @@ let toastIdCounter = 0;
 const seenAgents = new Set<string>();
 
 // Watch for new agents and show toast
-watch(uniqueAppNames, (newAppNames) => {
-  // Find agents that are new (not in seenAgents set)
-  newAppNames.forEach(appName => {
-    if (!seenAgents.has(appName)) {
-      seenAgents.add(appName);
-      // Show toast for new agent
-      const toast: Toast = {
-        id: toastIdCounter++,
-        agentName: appName,
-        agentColor: getHexColorForApp(appName)
-      };
-      toasts.value.push(toast);
-    }
-  });
-}, { deep: true });
+watch(
+  uniqueAppNames,
+  (newAppNames) => {
+    // Find agents that are new (not in seenAgents set)
+    newAppNames.forEach((appName) => {
+      if (!seenAgents.has(appName)) {
+        seenAgents.add(appName);
+        // Show toast for new agent
+        const toast: Toast = {
+          id: toastIdCounter++,
+          agentName: appName,
+          agentColor: getHexColorForApp(appName),
+        };
+        toasts.value.push(toast);
+      }
+    });
+  },
+  { deep: true },
+);
 
 const dismissToast = (id: number) => {
-  const index = toasts.value.findIndex(t => t.id === id);
+  const index = toasts.value.findIndex((t) => t.id === id);
   if (index !== -1) {
     toasts.value.splice(index, 1);
   }
@@ -241,7 +257,10 @@ const handleThemeManagerClick = () => {
   border-radius: 8px;
   color: var(--theme-text-secondary);
   border: 1px solid transparent;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .nav-icon-btn:hover {

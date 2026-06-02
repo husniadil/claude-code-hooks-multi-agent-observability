@@ -2,7 +2,8 @@
   <div class="h-full overflow-y-auto space-y-2.5 pr-1">
     <div v-for="(item, index) in chatItems" :key="index">
       <!-- User Message -->
-      <div v-if="item.type === 'user' && item.message"
+      <div
+v-if="item.type === 'user' && item.message"
            class="p-3 rounded-lg bg-[var(--theme-bg-primary)] border border-[var(--theme-border-primary)]">
         <div class="flex items-start justify-between">
           <div class="flex items-start space-x-3 flex-1">
@@ -11,7 +12,8 @@
             </span>
             <div class="flex-1">
               <!-- Handle string content -->
-              <p v-if="typeof item.message.content === 'string'" 
+              <p
+v-if="typeof item.message.content === 'string'" 
                  class="text-sm text-[var(--theme-text-primary)] whitespace-pre-wrap leading-relaxed">
                 {{ item.message.content.includes('<command-') ? cleanCommandContent(item.message.content) : item.message.content }}
               </p>
@@ -19,12 +21,14 @@
               <div v-else-if="Array.isArray(item.message.content)" class="space-y-2">
                 <div v-for="(content, cIndex) in item.message.content" :key="cIndex">
                   <!-- Text content -->
-                  <p v-if="content.type === 'text'" 
+                  <p
+v-if="content.type === 'text'" 
                      class="text-sm text-[var(--theme-text-primary)] whitespace-pre-wrap leading-relaxed">
                     {{ content.text }}
                   </p>
                   <!-- Tool result -->
-                  <div v-else-if="content.type === 'tool_result'"
+                  <div
+v-else-if="content.type === 'tool_result'"
                        class="bg-[var(--theme-surface-dark)] p-2.5 rounded-lg">
                     <span class="text-xs font-mono text-[var(--theme-on-dark-soft)]">Tool Result</span>
                     <pre class="text-xs font-mono text-[var(--theme-on-dark)] mt-1 whitespace-pre-wrap">{{ content.content }}</pre>
@@ -41,16 +45,16 @@
           <div class="flex items-center space-x-1 ml-2">
             <!-- Show Details Button -->
             <button
-              @click="toggleDetails(index)"
               class="px-2 py-1 text-xs font-medium text-[var(--theme-text-tertiary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] rounded transition-colors"
+              @click="toggleDetails(index)"
             >
               {{ isDetailsExpanded(index) ? 'Hide' : 'Show' }} Details
             </button>
             <!-- Copy Button -->
             <button
-              @click="copyMessage(index, item.type || item.role)"
               class="px-2 py-1 text-xs font-medium text-[var(--theme-text-tertiary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] rounded transition-colors flex items-center"
               :title="'Copy message'"
+              @click="copyMessage(index, item.type || item.role)"
             >
               {{ getCopyButtonText(index) }}
             </button>
@@ -63,7 +67,8 @@
       </div>
 
       <!-- Assistant Message -->
-      <div v-else-if="item.type === 'assistant' && item.message"
+      <div
+v-else-if="item.type === 'assistant' && item.message"
            class="p-3 rounded-lg bg-[var(--theme-bg-primary)] border border-[var(--theme-border-primary)]">
         <div class="flex items-start justify-between">
           <div class="flex items-start space-x-3 flex-1">
@@ -75,12 +80,14 @@
               <div v-if="Array.isArray(item.message.content)" class="space-y-2">
                 <div v-for="(content, cIndex) in item.message.content" :key="cIndex">
                   <!-- Text content -->
-                  <p v-if="content.type === 'text'" 
+                  <p
+v-if="content.type === 'text'" 
                      class="text-sm text-[var(--theme-text-primary)] whitespace-pre-wrap leading-relaxed">
                     {{ content.text }}
                   </p>
                   <!-- Tool use -->
-                  <div v-else-if="content.type === 'tool_use'"
+                  <div
+v-else-if="content.type === 'tool_use'"
                        class="bg-[var(--theme-surface-dark)] p-3 rounded-lg">
                     <div class="flex items-center gap-2 mb-2">
                       <Wrench :size="14" :stroke-width="1.75" class="text-[var(--theme-accent-amber)]" />
@@ -104,16 +111,16 @@
           <div class="flex items-center space-x-1 ml-2">
             <!-- Show Details Button -->
             <button
-              @click="toggleDetails(index)"
               class="px-2 py-1 text-xs font-medium text-[var(--theme-text-tertiary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] rounded transition-colors"
+              @click="toggleDetails(index)"
             >
               {{ isDetailsExpanded(index) ? 'Hide' : 'Show' }} Details
             </button>
             <!-- Copy Button -->
             <button
-              @click="copyMessage(index, item.type || item.role)"
               class="px-2 py-1 text-xs font-medium text-[var(--theme-text-tertiary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] rounded transition-colors flex items-center"
               :title="'Copy message'"
+              @click="copyMessage(index, item.type || item.role)"
             >
               {{ getCopyButtonText(index) }}
             </button>
@@ -126,7 +133,8 @@
       </div>
 
       <!-- System Message -->
-      <div v-else-if="item.type === 'system'"
+      <div
+v-else-if="item.type === 'system'"
            class="p-3 rounded-lg bg-[var(--theme-bg-primary)] border border-[var(--theme-border-primary)]">
         <div class="flex items-start justify-between">
           <div class="flex items-start space-x-3 flex-1">
@@ -151,16 +159,16 @@
           <div class="flex items-center space-x-1 ml-2">
             <!-- Show Details Button -->
             <button
-              @click="toggleDetails(index)"
               class="px-2 py-1 text-xs font-medium text-[var(--theme-text-tertiary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] rounded transition-colors"
+              @click="toggleDetails(index)"
             >
               {{ isDetailsExpanded(index) ? 'Hide' : 'Show' }} Details
             </button>
             <!-- Copy Button -->
             <button
-              @click="copyMessage(index, item.type || item.role)"
               class="px-2 py-1 text-xs font-medium text-[var(--theme-text-tertiary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] rounded transition-colors flex items-center"
               :title="'Copy message'"
+              @click="copyMessage(index, item.type || item.role)"
             >
               {{ getCopyButtonText(index) }}
             </button>
@@ -173,11 +181,13 @@
       </div>
 
       <!-- Fallback for simple chat format -->
-      <div v-else-if="item.role"
+      <div
+v-else-if="item.role"
            class="p-3 rounded-lg bg-[var(--theme-bg-primary)] border border-[var(--theme-border-primary)]">
         <div class="flex items-start justify-between">
           <div class="flex items-start space-x-3 flex-1">
-            <span class="text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0"
+            <span
+class="text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0"
                   :class="item.role === 'user' ? 'bg-[var(--theme-accent-info)]/15 text-[var(--theme-accent-info)]' : 'bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-secondary)]'">
               {{ item.role === 'user' ? 'User' : 'Assistant' }}
             </span>
@@ -191,16 +201,16 @@
           <div class="flex items-center space-x-1 ml-2">
             <!-- Show Details Button -->
             <button
-              @click="toggleDetails(index)"
               class="px-2 py-1 text-xs font-medium text-[var(--theme-text-tertiary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] rounded transition-colors"
+              @click="toggleDetails(index)"
             >
               {{ isDetailsExpanded(index) ? 'Hide' : 'Show' }} Details
             </button>
             <!-- Copy Button -->
             <button
-              @click="copyMessage(index, item.type || item.role)"
               class="px-2 py-1 text-xs font-medium text-[var(--theme-text-tertiary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] rounded transition-colors flex items-center"
               :title="'Copy message'"
+              @click="copyMessage(index, item.type || item.role)"
             >
               {{ getCopyButtonText(index) }}
             </button>
@@ -265,7 +275,8 @@ const formatTimestamp = (timestamp: string) => {
 // };
 
 const cleanSystemContent = (content: string) => {
-  // Remove ANSI escape codes
+  // Remove ANSI escape codes (the ESC control char is intentional here)
+  // eslint-disable-next-line no-control-regex
   return content.replace(/\u001b\[[0-9;]*m/g, '');
 };
 

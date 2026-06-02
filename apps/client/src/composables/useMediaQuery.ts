@@ -14,7 +14,9 @@ export function useMediaQuery() {
 
   // Computed properties for different screen sizes
   const isMobile = computed(() => windowWidth.value < MOBILE_BREAKPOINT);
-  const isTablet = computed(() => windowWidth.value >= MOBILE_BREAKPOINT && windowWidth.value < 1024);
+  const isTablet = computed(
+    () => windowWidth.value >= MOBILE_BREAKPOINT && windowWidth.value < 1024,
+  );
   const isDesktop = computed(() => windowWidth.value >= 1024);
 
   // Debounced resize handler
@@ -40,7 +42,7 @@ export function useMediaQuery() {
 
       // Set up media query listener for better performance
       mediaQuery = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
-      
+
       // Use the newer addEventListener if available, fallback to addListener
       if (mediaQuery.addEventListener) {
         mediaQuery.addEventListener('change', handleMediaQueryChange);
@@ -79,6 +81,6 @@ export function useMediaQuery() {
     isMobile,
     isTablet,
     isDesktop,
-    MOBILE_BREAKPOINT
+    MOBILE_BREAKPOINT,
   };
 }

@@ -21,7 +21,7 @@ describe('getSearchableText', () => {
 
   test('reads tool fields from payload, not top level', () => {
     const text = getSearchableText(
-      base({ payload: { tool_name: 'Bash', tool_input: { command: 'npm test' } } })
+      base({ payload: { tool_name: 'Bash', tool_input: { command: 'npm test' } } }),
     );
     expect(text).toContain('bash');
     expect(text).toContain('npm test');
@@ -29,7 +29,7 @@ describe('getSearchableText', () => {
 
   test('reads tool_input.file_path from payload', () => {
     const text = getSearchableText(
-      base({ payload: { tool_name: 'Edit', tool_input: { file_path: '/src/db.ts' } } })
+      base({ payload: { tool_name: 'Edit', tool_input: { file_path: '/src/db.ts' } } }),
     );
     expect(text).toContain('/src/db.ts');
   });
@@ -41,7 +41,13 @@ describe('getSearchableText', () => {
 
   test('reads humanInTheLoop question and type', () => {
     const text = getSearchableText(
-      base({ humanInTheLoop: { question: 'Deploy to prod?', type: 'permission', responseWebSocketUrl: '' } })
+      base({
+        humanInTheLoop: {
+          question: 'Deploy to prod?',
+          type: 'permission',
+          responseWebSocketUrl: '',
+        },
+      }),
     );
     expect(text).toContain('deploy to prod?');
     expect(text).toContain('permission');

@@ -49,7 +49,7 @@ export function useEventSearch() {
       return events;
     }
 
-    return events.filter(event => matchesPattern(event, pattern));
+    return events.filter((event) => matchesPattern(event, pattern));
   };
 
   // Computed property for current error
@@ -87,6 +87,6 @@ export function useEventSearch() {
     searchEvents,
     updateSearchPattern,
     clearSearch,
-    getSearchableText
+    getSearchableText,
   };
 }

@@ -20,7 +20,7 @@ export function useHITLNotifications() {
       body: event.humanInTheLoop.question.slice(0, 100),
       icon: '/vite.svg',
       tag: `hitl-${event.id}`,
-      requireInteraction: true
+      requireInteraction: true,
     });
 
     notification.onclick = () => {
@@ -32,6 +32,6 @@ export function useHITLNotifications() {
   return {
     hasPermission,
     requestPermission,
-    notifyHITLRequest
+    notifyHITLRequest,
   };
 }

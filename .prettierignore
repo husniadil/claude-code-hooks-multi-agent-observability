@@ -1,0 +1,13 @@
+**/node_modules/**
+**/dist/**
+**/bun.lock
+**/bun.lockb
+**/.claude/**
+hooks_docs/**
+app_docs/**
+apps/*/src/logs/**
+# Prettier's Vue parser chokes on the literal '<command-' inside a {{ }} expression
+# (reads it as an opening tag). ESLint still covers this file.
+apps/client/src/components/ChatTranscript.vue
+# Markdown is hand-authored (aligned tables, code guides) — don't reflow it.
+**/*.md

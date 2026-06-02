@@ -30,10 +30,12 @@
           :title="`Average time between events in the last ${timeRange === '1m' ? '1 minute' : timeRange === '3m' ? '3 minutes' : '5 minutes'}`"
         >
           <Clock :size="13" :stroke-width="1.75" />
-          <span class="font-mono tabular-nums">{{ formatGap(agentEventTimingMetrics.avgGap) }}</span>
+          <span class="font-mono tabular-nums">{{
+            formatGap(agentEventTimingMetrics.avgGap)
+          }}</span>
         </span>
       </div>
-      <button @click="emit('close')" class="close-btn" title="Remove this swim lane">
+      <button class="close-btn" title="Remove this swim lane" @click="emit('close')">
         <X :size="15" :stroke-width="2" />
       </button>
     </div>
@@ -42,10 +44,10 @@
         ref="canvas"
         class="w-full cursor-crosshair"
         :style="{ height: chartHeight + 'px' }"
-        @mousemove="handleMouseMove"
-        @mouseleave="handleMouseLeave"
         role="img"
         :aria-label="chartAriaLabel"
+        @mousemove="handleMouseMove"
+        @mouseleave="handleMouseLeave"
       ></canvas>
       <div
         v-if="tooltip.visible"
@@ -54,13 +56,8 @@
       >
         {{ tooltip.text }}
       </div>
-      <div
-        v-if="!hasData"
-        class="absolute inset-0 flex items-center justify-center"
-      >
-        <p class="text-[var(--theme-text-quaternary)] text-sm">
-          Waiting for events…
-        </p>
+      <div v-if="!hasData" class="absolute inset-0 flex items-center justify-center">
+        <p class="text-[var(--theme-text-quaternary)] text-sm">Waiting for events…</p>
       </div>
     </div>
   </div>
@@ -105,8 +102,8 @@ const sessionId = computed(() => props.agentName.split(':')[1]);
 const modelName = computed(() => {
   const [targetApp, targetSession] = props.agentName.split(':');
   const agentEvents = props.events
-    .filter(e => e.source_app === targetApp && e.session_id.slice(0, 8) === targetSession)
-    .filter(e => e.model_name); // Only events with model_name
+    .filter((e) => e.source_app === targetApp && e.session_id.slice(0, 8) === targetSession)
+    .filter((e) => e.model_name); // Only events with model_name
 
   if (agentEvents.length === 0) return null;
 
@@ -135,7 +132,7 @@ const {
   getChartData,
   setTimeRange,
   cleanup: cleanupChartData,
-  eventTimingMetrics: agentEventTimingMetrics
+  eventTimingMetrics: agentEventTimingMetrics,
 } = useAgentChartData(props.agentName);
 
 let renderer: ReturnType<typeof createChartRenderer> | null = null;
@@ -145,7 +142,7 @@ const processedEventIds = new Set<string>();
 
 const { getHexColorForApp, getHexColorForSession } = useEventColors();
 
-const hasData = computed(() => dataPoints.value.some(dp => dp.count > 0));
+const hasData = computed(() => dataPoints.value.some((dp) => dp.count > 0));
 
 const totalEventCount = computed(() => {
   return dataPoints.value.reduce((sum, dp) => sum + dp.count, 0);
@@ -166,7 +163,7 @@ const tooltip = ref({
   visible: false,
   x: 0,
   y: 0,
-  text: ''
+  text: '',
 });
 
 const getThemeColor = (property: string): string => {
@@ -185,8 +182,8 @@ const getActiveConfig = (): ChartConfig => {
       primary: getThemeColor('primary'),
       glow: getThemeColor('primary-light'),
       axis: getThemeColor('border-primary'),
-      text: getThemeColor('text-tertiary')
-    }
+      text: getThemeColor('text-tertiary'),
+    },
   };
 };
 
@@ -199,8 +196,8 @@ const getDimensions = (): ChartDimensions => {
       top: 7,
       right: 7,
       bottom: 20,
-      left: 7
-    }
+      left: 7,
+    },
   };
 };
 
@@ -208,7 +205,7 @@ const render = () => {
   if (!renderer || !canvas.value) return;
 
   const data = getChartData();
-  const maxValue = Math.max(...data.map(d => d.count), 1);
+  const maxValue = Math.max(...data.map((d) => d.count), 1);
 
   renderer.clear();
   renderer.drawBackground();
@@ -230,7 +227,7 @@ const processNewEvents = () => {
   const newEventsToProcess: HookEvent[] = [];
 
   // Find events that haven't been processed yet
-  currentEvents.forEach(event => {
+  currentEvents.forEach((event) => {
     const eventKey = `${event.id}-${event.timestamp}`;
     if (!processedEventIds.has(eventKey)) {
       processedEventIds.add(eventKey);
@@ -242,7 +239,7 @@ const processNewEvents = () => {
   const [targetApp, targetSession] = props.agentName.split(':');
 
   // Process new events (filter by agent ID: app:session)
-  newEventsToProcess.forEach(event => {
+  newEventsToProcess.forEach((event) => {
     if (
       event.hook_event_type !== 'refresh' &&
       event.hook_event_type !== 'initial' &&
@@ -254,8 +251,8 @@ const processNewEvents = () => {
   });
 
   // Clean up old event IDs to prevent memory leak
-  const currentEventIds = new Set(currentEvents.map(e => `${e.id}-${e.timestamp}`));
-  processedEventIds.forEach(id => {
+  const currentEventIds = new Set(currentEvents.map((e) => `${e.id}-${e.timestamp}`));
+  processedEventIds.forEach((id) => {
     if (!currentEventIds.has(id)) {
       processedEventIds.delete(id);
     }
@@ -268,10 +265,14 @@ const processNewEvents = () => {
 watch(() => props.events, processNewEvents, { deep: true, immediate: true });
 
 // Watch for time range changes - update internal timeRange and trigger reaggregation
-watch(() => props.timeRange, (newRange) => {
-  setTimeRange(newRange);
-  render();
-}, { immediate: true });
+watch(
+  () => props.timeRange,
+  (newRange) => {
+    setTimeRange(newRange);
+    render();
+  },
+  { immediate: true },
+);
 
 const handleMouseMove = (event: MouseEvent) => {
   if (!canvas.value || !chartContainer.value) return;
@@ -286,13 +287,18 @@ const handleMouseMove = (event: MouseEvent) => {
     x: dimensions.padding.left,
     y: dimensions.padding.top,
     width: dimensions.width - dimensions.padding.left - dimensions.padding.right,
-    height: dimensions.height - dimensions.padding.top - dimensions.padding.bottom
+    height: dimensions.height - dimensions.padding.top - dimensions.padding.bottom,
   };
 
   const barWidth = chartArea.width / data.length;
   const barIndex = Math.floor((x - chartArea.x) / barWidth);
 
-  if (barIndex >= 0 && barIndex < data.length && y >= chartArea.y && y <= chartArea.y + chartArea.height) {
+  if (
+    barIndex >= 0 &&
+    barIndex < data.length &&
+    y >= chartArea.y &&
+    y <= chartArea.y + chartArea.height
+  ) {
     const point = data[barIndex];
     if (point.count > 0) {
       const eventTypesText = Object.entries(point.eventTypes || {})
@@ -303,7 +309,7 @@ const handleMouseMove = (event: MouseEvent) => {
         visible: true,
         x: event.clientX - rect.left,
         y: event.clientY - rect.top - 30,
-        text: `${point.count} events${eventTypesText ? ` (${eventTypesText})` : ''}`
+        text: `${point.count} events${eventTypesText ? ` (${eventTypesText})` : ''}`,
       };
       return;
     }
@@ -338,7 +344,7 @@ onMounted(() => {
   // Observe theme changes
   themeObserver.observe(document.documentElement, {
     attributes: true,
-    attributeFilter: ['class']
+    attributeFilter: ['class'],
   });
 
   // Initial render
@@ -451,7 +457,9 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   border-radius: 6px;
-  transition: background-color 0.15s, color 0.15s;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
   flex-shrink: 0;
 }
 

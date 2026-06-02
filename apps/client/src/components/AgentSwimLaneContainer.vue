@@ -28,7 +28,7 @@ const emit = defineEmits<{
 }>();
 
 function removeAgent(agent: string) {
-  const updated = props.selectedAgents.filter(a => a !== agent);
+  const updated = props.selectedAgents.filter((a) => a !== agent);
   emit('update:selectedAgents', updated);
 }
 </script>

@@ -16,21 +16,17 @@ export class ChartRenderer {
   private dimensions: ChartDimensions;
   private config: ChartConfig;
   private animationId: number | null = null;
-  
-  constructor(
-    canvas: HTMLCanvasElement,
-    dimensions: ChartDimensions,
-    config: ChartConfig
-  ) {
+
+  constructor(canvas: HTMLCanvasElement, dimensions: ChartDimensions, config: ChartConfig) {
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error('Failed to get canvas context');
-    
+
     this.ctx = ctx;
     this.dimensions = dimensions;
     this.config = config;
     this.setupCanvas(canvas);
   }
-  
+
   private setupCanvas(canvas: HTMLCanvasElement) {
     const dpr = window.devicePixelRatio || 1;
     canvas.width = this.dimensions.width * dpr;
@@ -39,61 +35,56 @@ export class ChartRenderer {
     canvas.style.height = `${this.dimensions.height}px`;
     this.ctx.scale(dpr, dpr);
   }
-  
+
   private getChartArea() {
     const { width, height, padding } = this.dimensions;
     return {
       x: padding.left,
       y: padding.top,
       width: width - padding.left - padding.right,
-      height: height - padding.top - padding.bottom
+      height: height - padding.top - padding.bottom,
     };
   }
-  
+
   clear() {
     this.ctx.clearRect(0, 0, this.dimensions.width, this.dimensions.height);
   }
-  
+
   drawBackground() {
     const chartArea = this.getChartArea();
-    
+
     // Create subtle gradient background
     const gradient = this.ctx.createLinearGradient(
       chartArea.x,
       chartArea.y,
       chartArea.x,
-      chartArea.y + chartArea.height
+      chartArea.y + chartArea.height,
     );
     gradient.addColorStop(0, 'rgba(0, 0, 0, 0.02)');
     gradient.addColorStop(1, 'rgba(0, 0, 0, 0.05)');
-    
+
     this.ctx.fillStyle = gradient;
-    this.ctx.fillRect(
-      chartArea.x,
-      chartArea.y,
-      chartArea.width,
-      chartArea.height
-    );
+    this.ctx.fillRect(chartArea.x, chartArea.y, chartArea.width, chartArea.height);
   }
-  
+
   drawAxes() {
     const chartArea = this.getChartArea();
     this.ctx.strokeStyle = this.config.colors.axis;
     this.ctx.lineWidth = 1;
-    
+
     // X-axis
     this.ctx.beginPath();
     this.ctx.moveTo(chartArea.x, chartArea.y + chartArea.height);
     this.ctx.lineTo(chartArea.x + chartArea.width, chartArea.y + chartArea.height);
     this.ctx.stroke();
-    
+
     // Y-axis
     this.ctx.beginPath();
     this.ctx.moveTo(chartArea.x, chartArea.y);
     this.ctx.lineTo(chartArea.x, chartArea.y + chartArea.height);
     this.ctx.stroke();
   }
-  
+
   drawTimeLabels(timeRange: string) {
     const chartArea = this.getChartArea();
     this.ctx.fillStyle = this.config.colors.text;
@@ -105,7 +96,7 @@ export class ChartRenderer {
     const y = chartArea.y + chartArea.height + 5;
 
     labels.forEach((label, index) => {
-      const x = chartArea.x + (index * spacing);
+      const x = chartArea.x + index * spacing;
       // Anchor edge labels inward so they don't clip against the canvas bounds.
       if (index === 0) {
         this.ctx.textAlign = 'left';
@@ -117,7 +108,7 @@ export class ChartRenderer {
       this.ctx.fillText(label, x, y);
     });
   }
-  
+
   private getTimeLabels(timeRange: string): string[] {
     switch (timeRange) {
       case '1m':
@@ -132,34 +123,33 @@ export class ChartRenderer {
         return [];
     }
   }
-  
+
   drawBars(
     dataPoints: ChartDataPoint[],
     maxValue: number,
     progress: number = 1,
-    getSessionColor?: (sessionId: string) => string
+    getSessionColor?: (sessionId: string) => string,
   ) {
     const chartArea = this.getChartArea();
     const barCount = this.config.maxDataPoints;
     const totalBarWidth = chartArea.width / barCount;
     const barWidth = this.config.barWidth;
-    
+
     dataPoints.forEach((point, index) => {
       if (point.count === 0) return;
-      
-      const x = chartArea.x + (index * totalBarWidth) + (totalBarWidth - barWidth) / 2;
+
+      const x = chartArea.x + index * totalBarWidth + (totalBarWidth - barWidth) / 2;
       const barHeight = (point.count / maxValue) * chartArea.height * progress;
       const y = chartArea.y + chartArea.height - barHeight;
-      
+
       // Get the dominant session color for this bar
       let barColor = this.config.colors.primary;
       if (getSessionColor && point.sessions && Object.keys(point.sessions).length > 0) {
         // Get the session with the most events in this time bucket
-        const dominantSession = Object.entries(point.sessions)
-          .sort((a, b) => b[1] - a[1])[0][0];
+        const dominantSession = Object.entries(point.sessions).sort((a, b) => b[1] - a[1])[0][0];
         barColor = getSessionColor(dominantSession);
       }
-      
+
       // Draw bar with rounded top
       this.ctx.save();
       this.ctx.beginPath();
@@ -170,19 +160,19 @@ export class ChartRenderer {
       this.ctx.arcTo(x + barWidth, y, x + barWidth / 2, y, 2);
       this.ctx.arcTo(x, y, x, y + 2, 2);
       this.ctx.closePath();
-      
+
       // Enhanced gradient with session color
       const gradient = this.ctx.createLinearGradient(x, y, x, y + barHeight);
       gradient.addColorStop(0, this.adjustColorOpacity(barColor, 0.9));
       gradient.addColorStop(0.5, barColor);
       gradient.addColorStop(1, this.adjustColorOpacity(barColor, 0.7));
-      
+
       this.ctx.fillStyle = gradient;
       this.ctx.fill();
       this.ctx.restore();
     });
   }
-  
+
   private adjustColorOpacity(color: string, opacity: number): string {
     // Simple opacity adjustment - assumes hex color
     if (color.startsWith('#')) {
@@ -193,37 +183,37 @@ export class ChartRenderer {
     }
     return color;
   }
-  
+
   animate(renderCallback: (progress: number) => void) {
     const startTime = performance.now();
-    
+
     const frame = (currentTime: number) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / this.config.animationDuration, 1);
-      
+
       renderCallback(this.easeOut(progress));
-      
+
       if (progress < 1) {
         this.animationId = requestAnimationFrame(frame);
       } else {
         this.animationId = null;
       }
     };
-    
+
     this.animationId = requestAnimationFrame(frame);
   }
-  
+
   private easeOut(t: number): number {
     return 1 - Math.pow(1 - t, 3);
   }
-  
+
   stopAnimation() {
     if (this.animationId) {
       cancelAnimationFrame(this.animationId);
       this.animationId = null;
     }
   }
-  
+
   resize(dimensions: ChartDimensions) {
     this.dimensions = dimensions;
     this.setupCanvas(this.ctx.canvas as HTMLCanvasElement);
@@ -233,7 +223,7 @@ export class ChartRenderer {
 export function createChartRenderer(
   canvas: HTMLCanvasElement,
   dimensions: ChartDimensions,
-  config: ChartConfig
+  config: ChartConfig,
 ): ChartRenderer {
   return new ChartRenderer(canvas, dimensions, config);
 }

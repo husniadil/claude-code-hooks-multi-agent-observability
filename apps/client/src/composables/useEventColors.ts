@@ -19,7 +19,7 @@ export function useEventColors() {
   const hashString = (str: string): number => {
     let hash = 7151;
     for (let i = 0; i < str.length; i++) {
-      hash = ((hash << 5) + hash) + str.charCodeAt(i);
+      hash = (hash << 5) + hash + str.charCodeAt(i);
     }
     return Math.abs(hash >>> 0);
   };
