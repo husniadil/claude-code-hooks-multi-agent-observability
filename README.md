@@ -96,6 +96,8 @@ To integrate the observability hooks into your projects:
    
    Replace `YOUR_PROJECT_NAME` with a unique identifier for your project (e.g., `my-api-server`, `react-app`, etc.).
 
+   > **Note:** Every `send_event.py` invocation runs with `"async": true` so the HTTP POST and `--summarize` LLM call never block Claude's loop. `SessionEnd` is kept synchronous so the final event isn't dropped at exit, and local handlers (especially `pre_tool_use.py`, which blocks dangerous commands) stay synchronous because async hooks cannot block.
+
 3. **Ensure the observability server is running:**
    ```bash
    # From the observability project directory (this codebase)
