@@ -11,10 +11,10 @@
 Multi-Agent Observability Hook Script
 Sends Claude Code hook events to the observability server.
 
-Supported event types (12 total):
+Supported event types (15 total):
   SessionStart, SessionEnd, UserPromptSubmit, PreToolUse, PostToolUse,
   PostToolUseFailure, PermissionRequest, Notification, SubagentStart,
-  SubagentStop, Stop, PreCompact
+  SubagentStop, Stop, PreCompact, TaskCreated, TaskCompleted, TeammateIdle
 """
 
 import json

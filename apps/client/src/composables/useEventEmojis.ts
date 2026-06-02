@@ -11,6 +11,9 @@ const eventTypeToEmoji: Record<string, string> = {
   'UserPromptSubmit': '💬',
   'SessionStart': '🚀',
   'SessionEnd': '🏁',
+  'TaskCreated': '📋',
+  'TaskCompleted': '☑️',
+  'TeammateIdle': '😴',
   // Default
   'default': '❓'
 };
