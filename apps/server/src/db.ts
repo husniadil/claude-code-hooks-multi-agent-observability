@@ -173,7 +173,7 @@ export function getRecentEvents(limit: number = 300): HookEvent[] {
   const stmt = db.prepare(`
     SELECT id, source_app, session_id, hook_event_type, payload, chat, summary, timestamp, humanInTheLoop, humanInTheLoopStatus, model_name
     FROM events
-    ORDER BY timestamp DESC
+    ORDER BY timestamp DESC, id DESC
     LIMIT ?
   `);
 

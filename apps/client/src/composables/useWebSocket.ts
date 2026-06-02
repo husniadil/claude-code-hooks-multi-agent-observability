@@ -32,8 +32,14 @@ export function useWebSocket(url: string) {
             events.value = initialEvents.slice(-maxEvents);
           } else if (message.type === 'event') {
             const newEvent = message.data as HookEvent;
-            events.value.push(newEvent);
-            
+            // Insert keeping ascending timestamp order. Async hooks can deliver
+            // POSTs slightly out of fire-order, so scan back from the end (the
+            // common case is a plain append) to drop the event into place.
+            const ts = newEvent.timestamp ?? 0;
+            let i = events.value.length;
+            while (i > 0 && (events.value[i - 1].timestamp ?? 0) > ts) i--;
+            events.value.splice(i, 0, newEvent);
+
             // Limit events array to maxEvents, removing the oldest when exceeded
             if (events.value.length > maxEvents) {
               // Remove the oldest events (first 10) when limit is exceeded

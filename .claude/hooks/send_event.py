@@ -63,6 +63,11 @@ def send_event_to_server(event_data, server_url='http://localhost:4000/events'):
         return False
 
 def main():
+    # Capture the timestamp as early as possible so it tracks when the hook
+    # fired, not when the (now async) process finishes its transcript read /
+    # summary. This keeps event ordering close to fire-order.
+    event_timestamp = int(datetime.now().timestamp() * 1000)
+
     # Parse command line arguments
     parser = argparse.ArgumentParser(description='Send Claude Code hook events to observability server')
     parser.add_argument('--source-app', required=True, help='Source application name')
@@ -93,7 +98,7 @@ def main():
         'session_id': session_id,
         'hook_event_type': args.event_type,
         'payload': input_data,
-        'timestamp': int(datetime.now().timestamp() * 1000),
+        'timestamp': event_timestamp,
         'model_name': model_name
     }
 
