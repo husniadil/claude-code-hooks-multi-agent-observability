@@ -446,6 +446,7 @@ const server = Bun.serve({
   }
 });
 
-console.log(`🚀 Server running on http://localhost:${server.port}`);
-console.log(`📊 WebSocket endpoint: ws://localhost:${server.port}/stream`);
-console.log(`📮 POST events to: http://localhost:${server.port}/events`);
+const dim = '\x1b[2m', cyan = '\x1b[36m', green = '\x1b[32m', reset = '\x1b[0m';
+console.log(`${green}✓${reset} Server running   ${cyan}http://localhost:${server.port}${reset}`);
+console.log(`  ${dim}WebSocket${reset}      ${cyan}ws://localhost:${server.port}/stream${reset}`);
+console.log(`  ${dim}Events POST${reset}    ${cyan}http://localhost:${server.port}/events${reset}`);

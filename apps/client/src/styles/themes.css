@@ -43,6 +43,64 @@
   /* Theme transitions */
   --theme-transition: all 0.2s ease-in-out;
   --theme-transition-fast: all 0.1s ease-in-out;
+
+  /* Typography (global, theme-independent) */
+  --font-display: 'Cormorant Garamond', 'EB Garamond', Garamond, 'Times New Roman', serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Dark code-window surfaces (DESIGN.md trinity — used for payload/transcript on any theme) */
+  --theme-surface-dark: #181715;
+  --theme-surface-dark-elevated: #252320;
+  --theme-surface-dark-soft: #1f1e1b;
+  --theme-on-dark: #faf9f5;
+  --theme-on-dark-soft: #a09d96;
+  --theme-dark-hairline: #2f2c28;
+
+  /* Extended accents (DESIGN.md) */
+  --theme-accent-teal: #5db8a6;
+  --theme-accent-amber: #e8a55a;
+}
+
+/* Anthropic — warm cream + coral editorial (DESIGN.md). Default theme. */
+.theme-anthropic {
+  /* Primary — coral, kept scarce */
+  --theme-primary: #cc785c;
+  --theme-primary-hover: #a9583e;
+  --theme-primary-light: #efe9de; /* neutral cream wash, not coral — keeps coral scarce */
+  --theme-primary-dark: #a9583e;
+
+  /* Backgrounds — cream canvas trinity */
+  --theme-bg-primary: #faf9f5;   /* canvas */
+  --theme-bg-secondary: #f5f0e8; /* surface-soft */
+  --theme-bg-tertiary: #efe9de;  /* surface-card */
+  --theme-bg-quaternary: #e8e0d2;/* surface-cream-strong */
+
+  /* Text — warm ink ramp */
+  --theme-text-primary: #141413;  /* ink */
+  --theme-text-secondary: #3d3d3a;/* body */
+  --theme-text-tertiary: #6c6a64; /* muted */
+  --theme-text-quaternary: #8e8b82;/* muted-soft */
+
+  /* Borders — hairline tones */
+  --theme-border-primary: #e6dfd8;  /* hairline */
+  --theme-border-secondary: #d8cfc2;
+  --theme-border-tertiary: #c4b8a8;
+
+  /* Accents — DESIGN.md semantic + teal info */
+  --theme-accent-success: #5db872;
+  --theme-accent-warning: #d4a017;
+  --theme-accent-error: #c64545;
+  --theme-accent-info: #5db8a6;
+
+  /* Shadows — rare and faint (color-block first) */
+  --theme-shadow: rgba(20, 20, 19, 0.06);
+  --theme-shadow-lg: rgba(20, 20, 19, 0.10);
+
+  /* Interactive states */
+  --theme-hover-bg: rgba(20, 20, 19, 0.04);
+  --theme-active-bg: rgba(20, 20, 19, 0.08);
+  --theme-focus-ring: #cc785c;
 }
 
 /* Dark theme */

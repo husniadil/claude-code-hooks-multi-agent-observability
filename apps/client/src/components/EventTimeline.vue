@@ -1,68 +1,78 @@
 <template>
   <div class="flex-1 mobile:h-[50vh] overflow-hidden flex flex-col">
     <!-- Fixed Header -->
-    <div class="px-3 py-4 mobile:py-2 bg-gradient-to-r from-[var(--theme-bg-primary)] to-[var(--theme-bg-secondary)] relative z-10" style="box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.3), 0 8px 25px -5px rgba(0, 0, 0, 0.2);">
-      <h2 class="text-2xl mobile:text-lg font-bold text-[var(--theme-primary)] text-center drop-shadow-sm">
-        Agent Event Stream
-      </h2>
+    <div class="px-5 mobile:px-3 py-3 mobile:py-2 bg-[var(--theme-bg-primary)] border-b border-[var(--theme-border-primary)] relative z-10">
+      <div class="flex items-center justify-between gap-3">
+        <h2 class="font-display text-xl mobile:text-lg leading-none text-[var(--theme-text-primary)] tracking-tight">
+          Event Stream
+        </h2>
+        <span class="text-xs font-mono text-[var(--theme-text-quaternary)] tabular-nums">
+          {{ filteredEvents.length }} shown
+        </span>
+      </div>
 
       <!-- Agent/App Tags Row -->
-      <div v-if="displayedAgentIds.length > 0" class="mt-3 flex flex-wrap gap-2 mobile:gap-1.5 justify-start">
+      <div v-if="displayedAgentIds.length > 0" class="mt-2.5 flex flex-wrap gap-1.5 justify-start">
         <button
           v-for="agentId in displayedAgentIds"
           :key="agentId"
           @click="emit('selectAgent', agentId)"
           :class="[
-            'text-base mobile:text-sm font-bold px-3 mobile:px-2 py-1 rounded-full border-2 shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105 cursor-pointer',
+            'group/tag inline-flex items-center gap-1.5 text-xs font-mono px-2.5 py-1 rounded-full border transition-colors duration-150 cursor-pointer',
             isAgentActive(agentId)
-              ? 'text-[var(--theme-text-primary)] bg-[var(--theme-bg-tertiary)]'
-              : 'text-[var(--theme-text-tertiary)] bg-[var(--theme-bg-tertiary)] opacity-50 hover:opacity-75'
+              ? 'text-[var(--theme-text-secondary)] border-[var(--theme-border-secondary)] hover:border-[var(--theme-primary)]'
+              : 'text-[var(--theme-text-quaternary)] border-[var(--theme-border-primary)] opacity-70 hover:opacity-100'
           ]"
-          :style="{
-            borderColor: getHexColorForApp(getAppNameFromAgentId(agentId)),
-            backgroundColor: getHexColorForApp(getAppNameFromAgentId(agentId)) + (isAgentActive(agentId) ? '33' : '1a')
-          }"
-          :title="`${isAgentActive(agentId) ? 'Active: Click to add' : 'Sleeping: No recent events. Click to add'} ${agentId} to comparison lanes`"
+          :title="`${isAgentActive(agentId) ? 'Active' : 'Sleeping (no recent events)'} — click to add ${agentId} to comparison lanes`"
         >
-          <span class="mr-2">{{ isAgentActive(agentId) ? '✨' : '😴' }}</span>
-          <span class="font-mono text-sm">{{ agentId }}</span>
+          <span
+            class="w-2 h-2 rounded-full shrink-0"
+            :style="{ backgroundColor: getHexColorForApp(getAppNameFromAgentId(agentId)) }"
+            :class="{ 'opacity-40': !isAgentActive(agentId) }"
+          ></span>
+          <span>{{ agentId }}</span>
         </button>
       </div>
 
       <!-- Search Bar -->
-      <div class="mt-3 mobile:mt-2 w-full">
-        <div class="flex items-center gap-2 mobile:gap-1">
-          <div class="relative flex-1">
-            <input
-              type="text"
-              :value="searchPattern"
-              @input="updateSearchPattern(($event.target as HTMLInputElement).value)"
-              placeholder="Search events (regex enabled)... e.g., 'tool.*error' or '^GET'"
-              :class="[
-                'w-full px-3 mobile:px-2 py-2 mobile:py-1.5 rounded-lg text-sm mobile:text-xs font-mono border-2 transition-all duration-200',
-                'bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-primary)] placeholder-[var(--theme-text-quaternary)]',
-                'border-[var(--theme-border-primary)] focus:border-[var(--theme-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary)]/20',
-                searchError ? 'border-[var(--theme-accent-error)]' : ''
-              ]"
-              aria-label="Search events with regex pattern"
-            />
-            <button
-              v-if="searchPattern"
-              @click="clearSearch"
-              class="absolute right-2 top-1/2 transform -translate-y-1/2 text-[var(--theme-text-tertiary)] hover:text-[var(--theme-primary)] transition-colors duration-200"
-              title="Clear search"
-              aria-label="Clear search"
-            >
-              ✕
-            </button>
-          </div>
+      <div class="mt-2.5 w-full">
+        <div class="relative">
+          <Search
+            :size="15"
+            :stroke-width="1.75"
+            class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--theme-text-quaternary)] pointer-events-none"
+          />
+          <input
+            type="text"
+            :value="searchPattern"
+            @input="updateSearchPattern(($event.target as HTMLInputElement).value)"
+            placeholder="Search events — regex enabled, e.g. tool.*error or ^GET"
+            :class="[
+              'w-full pl-9 pr-9 py-2 rounded-lg text-sm mobile:text-xs font-mono transition-colors duration-150',
+              'bg-[var(--theme-bg-secondary)] text-[var(--theme-text-primary)] placeholder-[var(--theme-text-quaternary)]',
+              'border focus:outline-none',
+              searchError
+                ? 'border-[var(--theme-accent-error)] focus:border-[var(--theme-accent-error)]'
+                : 'border-[var(--theme-border-primary)] focus:border-[var(--theme-primary)]'
+            ]"
+            aria-label="Search events with regex pattern"
+          />
+          <button
+            v-if="searchPattern"
+            @click="clearSearch"
+            class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--theme-text-quaternary)] hover:text-[var(--theme-text-primary)] transition-colors"
+            title="Clear search"
+            aria-label="Clear search"
+          >
+            <X :size="15" :stroke-width="2" />
+          </button>
         </div>
         <div
           v-if="searchError"
-          class="mt-1.5 mobile:mt-1 px-2 py-1.5 mobile:py-1 bg-[var(--theme-accent-error)]/10 border border-[var(--theme-accent-error)] rounded-lg text-xs mobile:text-[11px] text-[var(--theme-accent-error)] font-semibold"
+          class="mt-1.5 px-2.5 py-1.5 bg-[var(--theme-accent-error)]/10 border border-[var(--theme-accent-error)]/40 rounded-lg text-xs text-[var(--theme-accent-error)] font-medium flex items-center gap-1.5"
           role="alert"
         >
-          <span class="inline-block mr-1">⚠️</span> {{ searchError }}
+          <AlertTriangle :size="13" :stroke-width="2" class="shrink-0" /> {{ searchError }}
         </div>
       </div>
     </div>
@@ -82,18 +92,14 @@
           v-for="event in filteredEvents"
           :key="`${event.id}-${event.timestamp}`"
           :event="event"
-          :gradient-class="getGradientForSession(event.session_id)"
-          :color-class="getColorForSession(event.session_id)"
-          :app-gradient-class="getGradientForApp(event.source_app)"
-          :app-color-class="getColorForApp(event.source_app)"
           :app-hex-color="getHexColorForApp(event.source_app)"
         />
       </TransitionGroup>
       
-      <div v-if="filteredEvents.length === 0" class="text-center py-8 mobile:py-6 text-[var(--theme-text-tertiary)]">
-        <div class="text-4xl mobile:text-3xl mb-3">🔳</div>
-        <p class="text-lg mobile:text-base font-semibold text-[var(--theme-primary)] mb-1.5">No events to display</p>
-        <p class="text-base mobile:text-sm">Events will appear here as they are received</p>
+      <div v-if="filteredEvents.length === 0" class="text-center py-12 mobile:py-8 text-[var(--theme-text-tertiary)]">
+        <Inbox :size="36" :stroke-width="1.25" class="mx-auto mb-3 text-[var(--theme-text-quaternary)]" />
+        <p class="font-display text-xl text-[var(--theme-text-primary)] mb-1">No events yet</p>
+        <p class="text-sm text-[var(--theme-text-tertiary)]">Events appear here as they stream in.</p>
       </div>
     </div>
   </div>
@@ -103,6 +109,7 @@
 import { ref, computed, watch, nextTick } from 'vue';
 import type { HookEvent } from '../types';
 import EventRow from './EventRow.vue';
+import { Search, X, AlertTriangle, Inbox } from 'lucide-vue-next';
 import { useEventColors } from '../composables/useEventColors';
 import { useEventSearch } from '../composables/useEventSearch';
 
@@ -124,7 +131,7 @@ const emit = defineEmits<{
 }>();
 
 const scrollContainer = ref<HTMLElement>();
-const { getGradientForSession, getColorForSession, getGradientForApp, getColorForApp, getHexColorForApp } = useEventColors();
+const { getHexColorForApp } = useEventColors();
 const { searchPattern, searchError, searchEvents, updateSearchPattern, clearSearch } = useEventSearch();
 
 // Use all agent IDs, preferring allAppNames if available (all ever seen), fallback to uniqueAppNames (active in time window)

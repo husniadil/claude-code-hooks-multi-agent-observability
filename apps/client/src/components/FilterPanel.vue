@@ -1,60 +1,60 @@
 <template>
-  <div class="bg-gradient-to-r from-[var(--theme-bg-primary)] to-[var(--theme-bg-secondary)] border-b-2 border-[var(--theme-primary)] px-3 py-4 mobile:py-2 shadow-lg">
-    <div class="flex flex-wrap gap-3 items-center mobile:flex-col mobile:items-stretch">
+  <div class="bg-[var(--theme-bg-secondary)] border-b border-[var(--theme-border-primary)] px-5 mobile:px-3 py-3 mobile:py-2.5">
+    <div class="flex flex-wrap gap-3 items-end mobile:flex-col mobile:items-stretch">
       <div class="flex-1 min-w-0 mobile:w-full">
-        <label class="block text-base mobile:text-sm font-bold text-[var(--theme-primary)] mb-1.5 drop-shadow-sm">
+        <label class="block text-xs font-medium uppercase tracking-wider text-[var(--theme-text-quaternary)] mb-1">
           Source App
         </label>
         <select
           v-model="localFilters.sourceApp"
           @change="updateFilters"
-          class="w-full px-4 py-2 mobile:px-2 mobile:py-1.5 text-base mobile:text-sm border border-[var(--theme-primary)] rounded-lg focus:ring-2 focus:ring-[var(--theme-primary)]/30 focus:border-[var(--theme-primary-dark)] bg-[var(--theme-bg-primary)] text-[var(--theme-text-primary)] shadow-md hover:shadow-lg transition-all duration-200"
+          class="filter-select"
         >
-          <option value="">All Sources</option>
+          <option value="">All sources</option>
           <option v-for="app in filterOptions.source_apps" :key="app" :value="app">
             {{ app }}
           </option>
         </select>
       </div>
-      
+
       <div class="flex-1 min-w-0 mobile:w-full">
-        <label class="block text-base mobile:text-sm font-bold text-[var(--theme-primary)] mb-1.5 drop-shadow-sm">
+        <label class="block text-xs font-medium uppercase tracking-wider text-[var(--theme-text-quaternary)] mb-1">
           Session ID
         </label>
         <select
           v-model="localFilters.sessionId"
           @change="updateFilters"
-          class="w-full px-4 py-2 mobile:px-2 mobile:py-1.5 text-base mobile:text-sm border border-[var(--theme-primary)] rounded-lg focus:ring-2 focus:ring-[var(--theme-primary)]/30 focus:border-[var(--theme-primary-dark)] bg-[var(--theme-bg-primary)] text-[var(--theme-text-primary)] shadow-md hover:shadow-lg transition-all duration-200"
+          class="filter-select"
         >
-          <option value="">All Sessions</option>
+          <option value="">All sessions</option>
           <option v-for="session in filterOptions.session_ids" :key="session" :value="session">
-            {{ session.slice(0, 8) }}...
+            {{ session.slice(0, 8) }}…
           </option>
         </select>
       </div>
-      
+
       <div class="flex-1 min-w-0 mobile:w-full">
-        <label class="block text-base mobile:text-sm font-bold text-[var(--theme-primary)] mb-1.5 drop-shadow-sm">
+        <label class="block text-xs font-medium uppercase tracking-wider text-[var(--theme-text-quaternary)] mb-1">
           Event Type
         </label>
         <select
           v-model="localFilters.eventType"
           @change="updateFilters"
-          class="w-full px-4 py-2 mobile:px-2 mobile:py-1.5 text-base mobile:text-sm border border-[var(--theme-primary)] rounded-lg focus:ring-2 focus:ring-[var(--theme-primary)]/30 focus:border-[var(--theme-primary-dark)] bg-[var(--theme-bg-primary)] text-[var(--theme-text-primary)] shadow-md hover:shadow-lg transition-all duration-200"
+          class="filter-select"
         >
-          <option value="">All Types</option>
+          <option value="">All types</option>
           <option v-for="type in filterOptions.hook_event_types" :key="type" :value="type">
             {{ type }}
           </option>
         </select>
       </div>
-      
+
       <button
         v-if="hasActiveFilters"
         @click="clearFilters"
-        class="px-4 py-2 mobile:px-2 mobile:py-1.5 mobile:w-full text-base mobile:text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-md transition-colors"
+        class="inline-flex items-center gap-1.5 px-3 py-2 mobile:w-full mobile:justify-center text-sm font-medium text-[var(--theme-text-secondary)] border border-[var(--theme-border-primary)] hover:bg-[var(--theme-hover-bg)] hover:text-[var(--theme-text-primary)] rounded-lg transition-colors"
       >
-        Clear Filters
+        <X :size="15" :stroke-width="1.75" /> Clear
       </button>
     </div>
   </div>
@@ -63,6 +63,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import type { FilterOptions } from '../types';
+import { X } from 'lucide-vue-next';
 import { API_BASE_URL } from '../config';
 
 const props = defineProps<{
@@ -119,3 +120,19 @@ onMounted(() => {
   setInterval(fetchFilterOptions, 10000);
 });
 </script>
+<style scoped>
+.filter-select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--theme-border-primary);
+  background-color: var(--theme-bg-primary);
+  color: var(--theme-text-primary);
+  transition: border-color 0.15s ease;
+}
+.filter-select:focus {
+  outline: none;
+  border-color: var(--theme-primary);
+}
+</style>

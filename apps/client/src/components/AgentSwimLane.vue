@@ -2,70 +2,39 @@
   <div class="agent-swim-lane">
     <div class="lane-header">
       <div class="header-left">
-        <div class="agent-label-container">
-          <span
-            class="agent-label-app"
-            :style="{
-              backgroundColor: getHexColorForApp(appName),
-              borderColor: getHexColorForApp(appName)
-            }"
-          >
-            <span class="font-mono text-xs">{{ appName }}</span>
-          </span>
-          <span
-            class="agent-label-session"
-            :style="{
-              backgroundColor: getHexColorForSession(sessionId),
-              borderColor: getHexColorForSession(sessionId)
-            }"
-          >
-            <span class="font-mono text-xs">{{ sessionId }}</span>
-          </span>
-        </div>
-        <div
-          v-if="modelName"
-          class="model-badge"
-          :title="`Model: ${modelName}`"
-        >
-          <span class="text-base">🧠</span>
-          <span class="text-xs font-bold">{{ formatModelName(modelName) }}</span>
-        </div>
-        <div
-          class="event-count-badge"
-          @mouseover="hoveredEventCount = true"
-          @mouseleave="hoveredEventCount = false"
+        <span class="agent-pill">
+          <span class="agent-dot" :style="{ backgroundColor: getHexColorForApp(appName) }"></span>
+          <span class="font-mono text-xs text-[var(--theme-text-primary)]">{{ appName }}</span>
+          <span class="font-mono text-xs text-[var(--theme-text-quaternary)]">{{ sessionId }}</span>
+        </span>
+        <span v-if="modelName" class="lane-stat" :title="`Model: ${modelName}`">
+          <Cpu :size="13" :stroke-width="1.75" />
+          <span class="font-mono">{{ formatModelName(modelName) }}</span>
+        </span>
+        <span
+          class="lane-stat"
           :title="`Total events in the last ${timeRange === '1m' ? '1 minute' : timeRange === '3m' ? '3 minutes' : '5 minutes'}`"
         >
-          <span class="text-base w-4 flex-shrink-0">⚡</span>
-          <span class="text-xs font-bold" :class="hoveredEventCount ? 'min-w-[65px]' : ''">
-            {{ hoveredEventCount ? `${totalEventCount} Events` : totalEventCount }}
-          </span>
-        </div>
-        <div
-          class="tool-call-badge"
-          @mouseover="hoveredToolCount = true"
-          @mouseleave="hoveredToolCount = false"
+          <Zap :size="13" :stroke-width="1.75" />
+          <span class="font-mono tabular-nums">{{ totalEventCount }}</span>
+        </span>
+        <span
+          class="lane-stat"
           :title="`Tool calls in the last ${timeRange === '1m' ? '1 minute' : timeRange === '3m' ? '3 minutes' : '5 minutes'}`"
         >
-          <span class="text-base w-4 flex-shrink-0">🔧</span>
-          <span class="text-xs font-bold" :class="hoveredToolCount ? 'min-w-[75px]' : ''">
-            {{ hoveredToolCount ? `${toolCallCount} Tool Calls` : toolCallCount }}
-          </span>
-        </div>
-        <div
-          class="avg-time-badge flex items-center gap-1.5 px-2 py-2 bg-[var(--theme-bg-tertiary)] rounded-lg border border-[var(--theme-border-primary)] shadow-sm min-h-[28px]"
-          @mouseover="hoveredAvgTime = true"
-          @mouseleave="hoveredAvgTime = false"
+          <Wrench :size="13" :stroke-width="1.75" />
+          <span class="font-mono tabular-nums">{{ toolCallCount }}</span>
+        </span>
+        <span
+          class="lane-stat"
           :title="`Average time between events in the last ${timeRange === '1m' ? '1 minute' : timeRange === '3m' ? '3 minutes' : '5 minutes'}`"
         >
-          <span class="text-lg w-5 flex-shrink-0">🕐</span>
-          <span class="text-sm font-bold text-[var(--theme-text-primary)]" :class="hoveredAvgTime ? 'min-w-[90px]' : ''">
-            {{ hoveredAvgTime ? `Avg Gap: ${formatGap(agentEventTimingMetrics.avgGap)}` : formatGap(agentEventTimingMetrics.avgGap) }}
-          </span>
-        </div>
+          <Clock :size="13" :stroke-width="1.75" />
+          <span class="font-mono tabular-nums">{{ formatGap(agentEventTimingMetrics.avgGap) }}</span>
+        </span>
       </div>
       <button @click="emit('close')" class="close-btn" title="Remove this swim lane">
-        ✕
+        <X :size="15" :stroke-width="2" />
       </button>
     </div>
     <div ref="chartContainer" class="chart-wrapper">
@@ -80,7 +49,7 @@
       ></canvas>
       <div
         v-if="tooltip.visible"
-        class="absolute bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primary-dark)] text-white px-2 py-1.5 rounded-lg text-xs pointer-events-none z-10 shadow-lg border border-[var(--theme-primary-light)] font-bold drop-shadow-md"
+        class="absolute bg-[var(--theme-surface-dark)] text-[var(--theme-on-dark)] px-2.5 py-1.5 rounded-lg text-xs pointer-events-none z-10 font-mono"
         :style="{ left: tooltip.x + 'px', top: tooltip.y + 'px' }"
       >
         {{ tooltip.text }}
@@ -89,9 +58,8 @@
         v-if="!hasData"
         class="absolute inset-0 flex items-center justify-center"
       >
-        <p class="text-[var(--theme-text-tertiary)] text-sm font-semibold">
-          <span class="mr-1">⏳</span>
-          Waiting for events...
+        <p class="text-[var(--theme-text-quaternary)] text-sm">
+          Waiting for events…
         </p>
       </div>
     </div>
@@ -103,8 +71,8 @@ import { ref, onMounted, onUnmounted, watch, computed } from 'vue';
 import type { HookEvent, TimeRange, ChartConfig } from '../types';
 import { useAgentChartData } from '../composables/useAgentChartData';
 import { createChartRenderer, type ChartDimensions } from '../utils/chartRenderer';
-import { useEventEmojis } from '../composables/useEventEmojis';
 import { useEventColors } from '../composables/useEventColors';
+import { Cpu, Zap, Wrench, Clock, X } from 'lucide-vue-next';
 
 const props = defineProps<{
   agentName: string; // Format: "app:session" (e.g., "claude-code:a1b2c3d4")
@@ -119,9 +87,6 @@ const emit = defineEmits<{
 const canvas = ref<HTMLCanvasElement>();
 const chartContainer = ref<HTMLDivElement>();
 const chartHeight = 80;
-const hoveredEventCount = ref(false);
-const hoveredToolCount = ref(false);
-const hoveredAvgTime = ref(false);
 
 // Format gap time in ms to readable string (e.g., "125ms" or "1.2s")
 const formatGap = (gapMs: number): string => {
@@ -178,7 +143,6 @@ let resizeObserver: ResizeObserver | null = null;
 let animationFrame: number | null = null;
 const processedEventIds = new Set<string>();
 
-const { formatEventTypeLabel } = useEventEmojis();
 const { getHexColorForApp, getHexColorForSession } = useEventColors();
 
 const hasData = computed(() => dataPoints.value.some(dp => dp.count > 0));
@@ -250,30 +214,7 @@ const render = () => {
   renderer.drawBackground();
   renderer.drawAxes();
   renderer.drawTimeLabels(props.timeRange);
-  renderer.drawBars(data, maxValue, 1, formatEventTypeLabel, getHexColorForSession);
-};
-
-const animateNewEvent = (x: number, y: number) => {
-  let radius = 0;
-  let opacity = 0.8;
-
-  const animate = () => {
-    if (!renderer) return;
-
-    render();
-    renderer.drawPulseEffect(x, y, radius, opacity);
-
-    radius += 2;
-    opacity -= 0.02;
-
-    if (opacity > 0) {
-      animationFrame = requestAnimationFrame(animate);
-    } else {
-      animationFrame = null;
-    }
-  };
-
-  animate();
+  renderer.drawBars(data, maxValue, 1, undefined, getHexColorForSession);
 };
 
 const handleResize = () => {
@@ -309,14 +250,6 @@ const processNewEvents = () => {
       event.session_id.slice(0, 8) === targetSession
     ) {
       addEvent(event);
-
-      // Trigger pulse animation for new event
-      if (renderer && canvas.value) {
-        const chartArea = getDimensions();
-        const x = chartArea.width - chartArea.padding.right - 10;
-        const y = chartArea.height / 2;
-        animateNewEvent(x, y);
-      }
     }
   });
 
@@ -470,106 +403,69 @@ onUnmounted(() => {
 .header-left {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
-.agent-label-container {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  white-space: nowrap;
-}
-
-.agent-label-app,
-.agent-label-session {
-  padding: 8px 8px;
-  border-radius: 0;
-  border: 1px solid currentColor;
-  color: white;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+.agent-pill {
   display: inline-flex;
   align-items: center;
-  min-height: 28px;
-}
-
-.agent-label-app {
-  border-radius: 3px 0 0 3px;
-}
-
-.agent-label-session {
-  border-radius: 0 3px 3px 0;
-  border-left: none;
-}
-
-.model-badge,
-.event-count-badge,
-.tool-call-badge {
-  display: flex;
-  align-items: center;
   gap: 6px;
-  padding: 8px 8px;
-  background: var(--theme-bg-tertiary);
+  padding: 4px 10px;
   border: 1px solid var(--theme-border-primary);
-  border-radius: 8px;
-  color: var(--theme-text-primary);
-  font-size: 11px;
+  border-radius: 9999px;
+  background: var(--theme-bg-primary);
   white-space: nowrap;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  user-select: none;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  min-height: 28px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.model-badge {
-  cursor: default;
+.agent-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  flex-shrink: 0;
 }
 
-.event-count-badge:hover,
-.tool-call-badge:hover,
-.model-badge:hover {
-  background: var(--theme-bg-quaternary);
-  border-color: var(--theme-primary);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.lane-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--theme-text-tertiary);
+  white-space: nowrap;
 }
 
-.avg-time-badge {
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+.lane-stat :deep(svg) {
+  color: var(--theme-text-quaternary);
 }
 
 .close-btn {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 14px;
-  color: var(--theme-text-tertiary);
+  color: var(--theme-text-quaternary);
   padding: 0;
-  width: 20px;
-  height: 20px;
+  width: 26px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 3px;
-  transition: all 0.2s;
+  border-radius: 6px;
+  transition: background-color 0.15s, color 0.15s;
   flex-shrink: 0;
 }
 
 .close-btn:hover {
-  background: var(--theme-bg-quaternary);
+  background: var(--theme-hover-bg);
   color: var(--theme-text-primary);
-  transform: scale(1.1);
 }
 
 .chart-wrapper {
   position: relative;
   width: 100%;
   border: 1px solid var(--theme-border-primary);
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
-  background: var(--theme-bg-tertiary);
+  background: var(--theme-bg-primary);
 }
 </style>

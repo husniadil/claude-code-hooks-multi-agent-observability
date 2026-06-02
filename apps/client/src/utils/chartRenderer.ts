@@ -97,16 +97,23 @@ export class ChartRenderer {
   drawTimeLabels(timeRange: string) {
     const chartArea = this.getChartArea();
     this.ctx.fillStyle = this.config.colors.text;
-    this.ctx.font = '11px system-ui, -apple-system, sans-serif';
-    this.ctx.textAlign = 'center';
+    this.ctx.font = '11px Inter, system-ui, -apple-system, sans-serif';
     this.ctx.textBaseline = 'top';
-    
+
     const labels = this.getTimeLabels(timeRange);
     const spacing = chartArea.width / (labels.length - 1);
-    
+    const y = chartArea.y + chartArea.height + 5;
+
     labels.forEach((label, index) => {
       const x = chartArea.x + (index * spacing);
-      const y = chartArea.y + chartArea.height + 5;
+      // Anchor edge labels inward so they don't clip against the canvas bounds.
+      if (index === 0) {
+        this.ctx.textAlign = 'left';
+      } else if (index === labels.length - 1) {
+        this.ctx.textAlign = 'right';
+      } else {
+        this.ctx.textAlign = 'center';
+      }
       this.ctx.fillText(label, x, y);
     });
   }
@@ -154,9 +161,6 @@ export class ChartRenderer {
         barColor = getSessionColor(dominantSession);
       }
       
-      // Draw glow effect with session color
-      this.drawBarGlow(x, y, barWidth, barHeight, point.count / maxValue, barColor);
-      
       // Draw bar with rounded top
       this.ctx.save();
       this.ctx.beginPath();
@@ -199,9 +203,8 @@ export class ChartRenderer {
           const bgX = labelX - bgWidth / 2;
           const bgY = labelY - bgHeight / 2;
           
-          // Draw rounded rectangle background - lighter in dark mode
-          const isDark = document.documentElement.classList.contains('dark');
-          this.ctx.fillStyle = isDark ? 'rgba(75, 85, 99, 0.95)' : 'rgba(0, 0, 0, 0.85)';
+          // Draw rounded rectangle background — warm dark surface (DESIGN.md trinity)
+          this.ctx.fillStyle = 'rgba(24, 23, 21, 0.9)';
           this.ctx.beginPath();
           if ('roundRect' in this.ctx && typeof (this.ctx as any).roundRect === 'function') {
             (this.ctx as any).roundRect(bgX, bgY, bgWidth, bgHeight, 7);
@@ -236,28 +239,6 @@ export class ChartRenderer {
     });
   }
   
-  private drawBarGlow(x: number, y: number, width: number, height: number, intensity: number, color?: string) {
-    const glowRadius = 10 + (intensity * 20);
-    const centerX = x + width / 2;
-    const centerY = y + height / 2;
-    
-    const glowColor = color || this.config.colors.glow;
-    const gradient = this.ctx.createRadialGradient(
-      centerX, centerY, 0,
-      centerX, centerY, glowRadius
-    );
-    gradient.addColorStop(0, this.adjustColorOpacity(glowColor, 0.3 * intensity));
-    gradient.addColorStop(1, 'transparent');
-    
-    this.ctx.fillStyle = gradient;
-    this.ctx.fillRect(
-      centerX - glowRadius,
-      centerY - glowRadius,
-      glowRadius * 2,
-      glowRadius * 2
-    );
-  }
-  
   private adjustColorOpacity(color: string, opacity: number): string {
     // Simple opacity adjustment - assumes hex color
     if (color.startsWith('#')) {
@@ -267,18 +248,6 @@ export class ChartRenderer {
       return `rgba(${r}, ${g}, ${b}, ${opacity})`;
     }
     return color;
-  }
-  
-  drawPulseEffect(x: number, y: number, radius: number, opacity: number) {
-    const gradient = this.ctx.createRadialGradient(x, y, 0, x, y, radius);
-    gradient.addColorStop(0, this.adjustColorOpacity(this.config.colors.primary, opacity));
-    gradient.addColorStop(0.5, this.adjustColorOpacity(this.config.colors.primary, opacity * 0.5));
-    gradient.addColorStop(1, 'transparent');
-    
-    this.ctx.fillStyle = gradient;
-    this.ctx.beginPath();
-    this.ctx.arc(x, y, radius, 0, Math.PI * 2);
-    this.ctx.fill();
   }
   
   animate(renderCallback: (progress: number) => void) {

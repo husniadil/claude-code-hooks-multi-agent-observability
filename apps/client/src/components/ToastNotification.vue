@@ -2,26 +2,25 @@
   <Transition name="toast">
     <div
       v-if="isVisible"
-      class="fixed left-1/2 transform -translate-x-1/2 z-50 flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primary-light)] text-white rounded-lg border-2 font-semibold drop-shadow-2xl transition-all duration-300"
+      class="fixed left-1/2 -translate-x-1/2 z-50 flex items-center gap-2.5 pl-3 pr-1.5 py-2 bg-[var(--theme-bg-primary)] text-[var(--theme-text-primary)] rounded-lg border border-[var(--theme-border-primary)] transition-all duration-300"
       :style="{
-        top: `${16 + (index * 68)}px`,
-        borderColor: agentColor,
-        boxShadow: `0 10px 40px -10px rgba(0, 0, 0, 0.5), 0 20px 50px -15px rgba(0, 0, 0, 0.3), 0 0 0 3px ${agentColor}33`
+        top: `${16 + (index * 56)}px`,
+        boxShadow: '0 6px 20px -6px rgba(20, 20, 19, 0.18)'
       }"
     >
-      <div
-        class="w-3 h-3 rounded-full"
+      <span
+        class="w-2 h-2 rounded-full shrink-0"
         :style="{ backgroundColor: agentColor }"
-      ></div>
+      ></span>
       <span class="text-sm">
-        New Agent <span class="font-bold px-1.5 py-0.5 bg-white/20 rounded">"{{ agentName }}"</span> Joined
+        New agent <span class="font-mono font-medium text-[var(--theme-text-primary)]">{{ agentName }}</span> joined
       </span>
       <button
         @click="dismiss"
-        class="ml-2 text-white hover:text-white/80 transition-colors duration-200 font-bold text-lg leading-none"
+        class="ml-1 p-1 rounded text-[var(--theme-text-quaternary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] transition-colors"
         aria-label="Dismiss notification"
       >
-        ×
+        <X :size="15" :stroke-width="2" />
       </button>
     </div>
   </Transition>
@@ -29,6 +28,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
+import { X } from 'lucide-vue-next';
 
 const props = defineProps<{
   agentName: string;

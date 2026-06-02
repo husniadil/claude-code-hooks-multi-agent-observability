@@ -1,39 +1,21 @@
 <template>
   <button
     @click="$emit('toggle')"
-    class="fixed bottom-6 right-6 mobile:bottom-4 mobile:right-4 p-4 mobile:p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 min-w-[44px] min-h-[44px] flex items-center justify-center border-2 transform hover:scale-110"
-    :class="[
-      stickToBottom 
-        ? 'bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primary-light)] text-white border-[var(--theme-primary-dark)] drop-shadow-md' 
-        : 'bg-[var(--theme-bg-primary)] hover:bg-[var(--theme-bg-secondary)] text-[var(--theme-text-primary)] border-[var(--theme-border-primary)] hover:border-[var(--theme-primary)]'
-    ]"
-    :title="stickToBottom ? 'Disable auto-scroll' : 'Enable auto-scroll'"
+    class="fixed bottom-6 right-6 mobile:bottom-4 mobile:right-4 w-11 h-11 rounded-full transition-colors duration-150 flex items-center justify-center border"
+    :class="stickToBottom
+      ? 'bg-[var(--theme-primary)] hover:bg-[var(--theme-primary-hover)] text-white border-[var(--theme-primary-hover)]'
+      : 'bg-[var(--theme-bg-primary)] hover:bg-[var(--theme-bg-secondary)] text-[var(--theme-text-secondary)] border-[var(--theme-border-primary)]'"
+    :style="{ boxShadow: '0 4px 14px -4px rgba(20, 20, 19, 0.2)' }"
+    :title="stickToBottom ? 'Auto-scroll on — click to pause' : 'Auto-scroll off — click to follow'"
   >
-    <svg
-      class="w-6 h-6 mobile:w-5 mobile:h-5 drop-shadow-sm"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        v-if="stickToBottom"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M19 14l-7 7m0 0l-7-7m7 7V3"
-      />
-      <path
-        v-else
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6v.01"
-      />
-    </svg>
+    <ArrowDownToLine v-if="stickToBottom" :size="19" :stroke-width="1.85" />
+    <ArrowDown v-else :size="19" :stroke-width="1.85" />
   </button>
 </template>
 
 <script setup lang="ts">
+import { ArrowDown, ArrowDownToLine } from 'lucide-vue-next';
+
 defineProps<{
   stickToBottom: boolean;
 }>();

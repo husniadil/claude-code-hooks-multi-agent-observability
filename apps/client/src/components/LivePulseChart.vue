@@ -1,57 +1,57 @@
 <template>
-  <div class="bg-gradient-to-r from-[var(--theme-bg-primary)] to-[var(--theme-bg-secondary)] px-3 py-4 mobile:py-2 shadow-lg">
-    <div class="flex items-center justify-between mb-3 mobile:mb-2">
-      <div class="flex items-center gap-3 mobile:gap-2">
-        <h3 class="text-base mobile:text-xs font-bold text-[var(--theme-primary)] drop-shadow-sm flex items-center">
-          <span class="mr-1.5 mobile:mr-1 text-xl mobile:text-sm">📊</span>
-          <span class="mobile:hidden">Live Activity Pulse</span>
+  <div class="bg-[var(--theme-bg-primary)] border-b border-[var(--theme-border-primary)] px-5 mobile:px-3 py-3 mobile:py-2">
+    <div class="flex items-center justify-between gap-3 mb-2.5 mobile:mb-2">
+      <div class="flex items-center gap-4 mobile:gap-2.5 min-w-0 flex-wrap">
+        <h3 class="inline-flex items-center gap-1.5 font-display text-lg mobile:text-base leading-none text-[var(--theme-text-primary)] tracking-tight shrink-0">
+          <Activity :size="16" :stroke-width="1.75" class="text-[var(--theme-text-tertiary)]" />
+          <span class="mobile:hidden">Live Activity</span>
         </h3>
-        <div class="flex items-center gap-1.5 flex-wrap">
-          <div
-            class="flex items-center gap-1.5 px-2 py-1 bg-gradient-to-r from-[var(--theme-primary)]/10 to-[var(--theme-primary-light)]/10 rounded-lg border border-[var(--theme-primary)]/30 shadow-sm"
+        <div class="flex items-center gap-3.5 mobile:gap-2.5 flex-wrap">
+          <span
+            class="inline-flex items-center gap-1.5 text-xs text-[var(--theme-text-tertiary)]"
             :title="`${uniqueAgentCount} active agent${uniqueAgentCount !== 1 ? 's' : ''}`"
           >
-            <span class="text-lg mobile:text-base">👥</span>
-            <span class="text-sm mobile:text-xs font-bold text-[var(--theme-primary)]">{{ uniqueAgentCount }}</span>
-            <span class="text-xs mobile:text-[10px] text-[var(--theme-text-tertiary)] font-medium mobile:hidden">agents</span>
-          </div>
-          <div
-            class="flex items-center gap-1.5 px-2 py-1 bg-[var(--theme-bg-tertiary)] rounded-lg border border-[var(--theme-border-primary)] shadow-sm"
+            <Users :size="14" :stroke-width="1.75" class="text-[var(--theme-text-quaternary)]" />
+            <span class="font-mono font-medium text-[var(--theme-text-primary)] tabular-nums">{{ uniqueAgentCount }}</span>
+            <span class="mobile:hidden">agents</span>
+          </span>
+          <span
+            class="inline-flex items-center gap-1.5 text-xs text-[var(--theme-text-tertiary)]"
             :title="`Total events in the last ${timeRange === '1m' ? '1 minute' : timeRange === '3m' ? '3 minutes' : timeRange === '5m' ? '5 minutes' : '10 minutes'}`"
           >
-            <span class="text-lg mobile:text-base">⚡</span>
-            <span class="text-sm mobile:text-xs font-bold text-[var(--theme-text-primary)]">{{ totalEventCount }}</span>
-            <span class="text-xs mobile:text-[10px] text-[var(--theme-text-tertiary)] font-medium mobile:hidden">events</span>
-          </div>
-          <div
-            class="flex items-center gap-1.5 px-2 py-1 bg-[var(--theme-bg-tertiary)] rounded-lg border border-[var(--theme-border-primary)] shadow-sm"
+            <Zap :size="14" :stroke-width="1.75" class="text-[var(--theme-text-quaternary)]" />
+            <span class="font-mono font-medium text-[var(--theme-text-primary)] tabular-nums">{{ totalEventCount }}</span>
+            <span class="mobile:hidden">events</span>
+          </span>
+          <span
+            class="inline-flex items-center gap-1.5 text-xs text-[var(--theme-text-tertiary)]"
             :title="`Total tool calls in the last ${timeRange === '1m' ? '1 minute' : timeRange === '3m' ? '3 minutes' : timeRange === '5m' ? '5 minutes' : '10 minutes'}`"
           >
-            <span class="text-lg mobile:text-base">🔧</span>
-            <span class="text-sm mobile:text-xs font-bold text-[var(--theme-text-primary)]">{{ toolCallCount }}</span>
-            <span class="text-xs mobile:text-[10px] text-[var(--theme-text-tertiary)] font-medium mobile:hidden">tools</span>
-          </div>
-          <div
-            class="flex items-center gap-1.5 px-2 py-1 bg-[var(--theme-bg-tertiary)] rounded-lg border border-[var(--theme-border-primary)] shadow-sm"
+            <Wrench :size="14" :stroke-width="1.75" class="text-[var(--theme-text-quaternary)]" />
+            <span class="font-mono font-medium text-[var(--theme-text-primary)] tabular-nums">{{ toolCallCount }}</span>
+            <span class="mobile:hidden">tools</span>
+          </span>
+          <span
+            class="inline-flex items-center gap-1.5 text-xs text-[var(--theme-text-tertiary)]"
             :title="`Average time between events in the last ${timeRange === '1m' ? '1 minute' : timeRange === '3m' ? '3 minutes' : timeRange === '5m' ? '5 minutes' : '10 minutes'}`"
           >
-            <span class="text-lg mobile:text-base">🕐</span>
-            <span class="text-sm mobile:text-xs font-bold text-[var(--theme-text-primary)]">{{ formatGap(eventTimingMetrics.avgGap) }}</span>
-            <span class="text-xs mobile:text-[10px] text-[var(--theme-text-tertiary)] font-medium mobile:hidden">avg gap</span>
-          </div>
+            <Clock :size="14" :stroke-width="1.75" class="text-[var(--theme-text-quaternary)]" />
+            <span class="font-mono font-medium text-[var(--theme-text-primary)] tabular-nums">{{ formatGap(eventTimingMetrics.avgGap) }}</span>
+            <span class="mobile:hidden">avg gap</span>
+          </span>
         </div>
       </div>
-      <div class="flex gap-1.5 mobile:gap-1" role="tablist" aria-label="Time range selector">
+      <div class="flex gap-1 shrink-0" role="tablist" aria-label="Time range selector">
         <button
           v-for="(range, index) in timeRanges"
           :key="range"
           @click="setTimeRange(range)"
           @keydown="handleTimeRangeKeyDown($event, index)"
           :class="[
-            'px-3 py-1.5 mobile:px-2 mobile:py-1 text-sm mobile:text-xs font-bold rounded-lg transition-all duration-200 min-w-[30px] mobile:min-w-[24px] min-h-[30px] mobile:min-h-[24px] flex items-center justify-center shadow-md hover:shadow-lg transform hover:scale-105 border',
+            'px-2.5 py-1 mobile:px-2 text-xs font-mono font-medium rounded-md transition-colors duration-150 border',
             timeRange === range
-              ? 'bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primary-light)] text-white border-[var(--theme-primary-dark)] drop-shadow-md'
-              : 'bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-primary)] border-[var(--theme-border-primary)] hover:bg-[var(--theme-bg-quaternary)] hover:border-[var(--theme-primary)]'
+              ? 'bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-primary)] border-[var(--theme-border-secondary)]'
+              : 'text-[var(--theme-text-tertiary)] border-transparent hover:bg-[var(--theme-hover-bg)] hover:text-[var(--theme-text-primary)]'
           ]"
           role="tab"
           :aria-selected="timeRange === range"
@@ -74,7 +74,7 @@
       ></canvas>
       <div
         v-if="tooltip.visible"
-        class="absolute bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primary-dark)] text-white px-2 py-1.5 mobile:px-3 mobile:py-2 rounded-lg text-xs mobile:text-sm pointer-events-none z-10 shadow-lg border border-[var(--theme-primary-light)] font-bold drop-shadow-md"
+        class="absolute bg-[var(--theme-surface-dark)] text-[var(--theme-on-dark)] px-2.5 py-1.5 rounded-lg text-xs mobile:text-sm pointer-events-none z-10 font-mono"
         :style="{ left: tooltip.x + 'px', top: tooltip.y + 'px' }"
       >
         {{ tooltip.text }}
@@ -83,9 +83,9 @@
         v-if="!hasData"
         class="absolute inset-0 flex items-center justify-center"
       >
-        <p class="text-[var(--theme-text-tertiary)] mobile:text-sm text-base font-semibold">
-          <span class="mr-1.5 text-base">⏳</span>
-          Waiting for events...
+        <p class="inline-flex items-center gap-1.5 text-[var(--theme-text-quaternary)] text-sm">
+          <Loader :size="15" :stroke-width="1.75" class="animate-spin-slow" />
+          Waiting for events…
         </p>
       </div>
     </div>
@@ -97,8 +97,8 @@ import { ref, onMounted, onUnmounted, watch, computed } from 'vue';
 import type { HookEvent, TimeRange, ChartConfig } from '../types';
 import { useChartData } from '../composables/useChartData';
 import { createChartRenderer, type ChartDimensions } from '../utils/chartRenderer';
-import { useEventEmojis } from '../composables/useEventEmojis';
 import { useEventColors } from '../composables/useEventColors';
+import { Activity, Users, Zap, Wrench, Clock, Loader } from 'lucide-vue-next';
 
 const props = defineProps<{
   events: HookEvent[];
@@ -166,7 +166,6 @@ let resizeObserver: ResizeObserver | null = null;
 let animationFrame: number | null = null;
 const processedEventIds = new Set<string>();
 
-const { formatEventTypeLabel } = useEventEmojis();
 const { getHexColorForSession } = useEventColors();
 
 const hasData = computed(() => dataPoints.value.some(dp => dp.count > 0));
@@ -232,30 +231,8 @@ const render = () => {
   renderer.drawBackground();
   renderer.drawAxes();
   renderer.drawTimeLabels(timeRange.value);
-  renderer.drawBars(data, maxValue, 1, formatEventTypeLabel, getHexColorForSession);
-};
-
-const animateNewEvent = (x: number, y: number) => {
-  let radius = 0;
-  let opacity = 0.8;
-  
-  const animate = () => {
-    if (!renderer) return;
-    
-    render();
-    renderer.drawPulseEffect(x, y, radius, opacity);
-    
-    radius += 2;
-    opacity -= 0.02;
-    
-    if (opacity > 0) {
-      animationFrame = requestAnimationFrame(animate);
-    } else {
-      animationFrame = null;
-    }
-  };
-  
-  animate();
+  // No glyph labels on bars — keep them clean; details surface via the hover tooltip.
+  renderer.drawBars(data, maxValue, 1, undefined, getHexColorForSession);
 };
 
 const handleWindowResize = () => {
@@ -300,14 +277,6 @@ const processNewEvents = () => {
   newEventsToProcess.forEach(event => {
     if (event.hook_event_type !== 'refresh' && event.hook_event_type !== 'initial' && isEventFiltered(event)) {
       addEvent(event);
-      
-      // Trigger pulse animation for new event
-      if (renderer && canvas.value) {
-        const chartArea = getDimensions();
-        const x = chartArea.width - chartArea.padding.right - 10;
-        const y = chartArea.height / 2;
-        animateNewEvent(x, y);
-      }
     }
   });
   
@@ -499,3 +468,11 @@ onUnmounted(() => {
   window.removeEventListener('resize', handleWindowResize);
 });
 </script>
+<style scoped>
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 2s linear infinite;
+}
+</style>

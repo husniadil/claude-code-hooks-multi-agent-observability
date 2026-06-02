@@ -1,63 +1,57 @@
 <template>
   <div class="h-screen flex flex-col bg-[var(--theme-bg-secondary)]">
-    <!-- Header with Primary Theme Colors -->
-    <header class="short:hidden bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primary-light)] shadow-lg border-b-2 border-[var(--theme-primary-dark)]">
-      <div class="px-3 py-4 mobile:py-1.5 mobile:px-2 flex items-center justify-between mobile:gap-2">
-        <!-- Title Section - Hidden on mobile -->
-        <div class="mobile:hidden">
-          <h1 class="text-2xl font-bold text-white drop-shadow-lg">
-            Multi-Agent Observability
+    <!-- Top navigation — cream canvas, hairline rule, color-block first -->
+    <header class="short:hidden bg-[var(--theme-bg-primary)] border-b border-[var(--theme-border-primary)]">
+      <div class="px-5 py-3 mobile:py-2 mobile:px-3 flex items-center justify-between gap-3">
+        <!-- Brand -->
+        <div class="flex items-center gap-2.5 min-w-0">
+          <SpikeMark class="w-4 h-4 text-[var(--theme-primary)] shrink-0" />
+          <h1 class="font-display text-2xl mobile:text-lg leading-none text-[var(--theme-text-primary)] tracking-tight truncate">
+            Observability
           </h1>
         </div>
 
-        <!-- Connection Status -->
-        <div class="flex items-center mobile:space-x-1 space-x-1.5">
-          <div v-if="isConnected" class="flex items-center mobile:space-x-0.5 space-x-1.5">
-            <span class="relative flex mobile:h-2 mobile:w-2 h-3 w-3">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full mobile:h-2 mobile:w-2 h-3 w-3 bg-green-500"></span>
+        <!-- Right cluster -->
+        <div class="flex items-center gap-2 mobile:gap-1.5">
+          <!-- Connection status -->
+          <div class="flex items-center gap-1.5 px-2.5 py-1 mobile:px-2 rounded-full border border-[var(--theme-border-primary)]">
+            <span class="relative flex h-2 w-2">
+              <span
+                v-if="isConnected"
+                class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60"
+                :style="{ backgroundColor: 'var(--theme-accent-success)' }"
+              ></span>
+              <span
+                class="relative inline-flex rounded-full h-2 w-2"
+                :style="{ backgroundColor: isConnected ? 'var(--theme-accent-success)' : 'var(--theme-accent-error)' }"
+              ></span>
             </span>
-            <span class="text-base mobile:text-xs text-white font-semibold drop-shadow-md mobile:hidden">Connected</span>
-          </div>
-          <div v-else class="flex items-center mobile:space-x-0.5 space-x-1.5">
-            <span class="relative flex mobile:h-2 mobile:w-2 h-3 w-3">
-              <span class="relative inline-flex rounded-full mobile:h-2 mobile:w-2 h-3 w-3 bg-red-500"></span>
+            <span class="text-xs font-medium text-[var(--theme-text-tertiary)] mobile:hidden">
+              {{ isConnected ? 'Live' : 'Offline' }}
             </span>
-            <span class="text-base mobile:text-xs text-white font-semibold drop-shadow-md mobile:hidden">Disconnected</span>
           </div>
-        </div>
 
-        <!-- Event Count and Theme Toggle -->
-        <div class="flex items-center mobile:space-x-1 space-x-2">
-          <span class="text-base mobile:text-xs text-white font-semibold drop-shadow-md bg-[var(--theme-primary-dark)] mobile:px-2 mobile:py-0.5 px-3 py-1.5 rounded-full border border-white/30">
+          <!-- Event count -->
+          <span class="text-xs font-medium font-mono text-[var(--theme-text-secondary)] bg-[var(--theme-bg-tertiary)] px-2.5 py-1 rounded-full tabular-nums">
             {{ events.length }}
           </span>
 
-          <!-- Clear Button -->
-          <button
-            @click="handleClearClick"
-            class="p-3 mobile:p-1 rounded-lg bg-white/20 hover:bg-white/30 transition-all duration-200 border border-white/30 hover:border-white/50 backdrop-blur-sm shadow-lg hover:shadow-xl"
-            title="Clear events"
-          >
-            <span class="text-2xl mobile:text-base">🗑️</span>
-          </button>
+          <div class="w-px h-5 bg-[var(--theme-border-primary)] mx-0.5 mobile:hidden"></div>
 
-          <!-- Filters Toggle Button -->
+          <!-- Icon actions -->
+          <button @click="handleClearClick" class="nav-icon-btn" title="Clear events">
+            <Trash2 :size="17" :stroke-width="1.75" />
+          </button>
           <button
             @click="showFilters = !showFilters"
-            class="p-3 mobile:p-1 rounded-lg bg-white/20 hover:bg-white/30 transition-all duration-200 border border-white/30 hover:border-white/50 backdrop-blur-sm shadow-lg hover:shadow-xl"
+            class="nav-icon-btn"
+            :class="{ 'nav-icon-btn--active': showFilters }"
             :title="showFilters ? 'Hide filters' : 'Show filters'"
           >
-            <span class="text-2xl mobile:text-base">📊</span>
+            <SlidersHorizontal :size="17" :stroke-width="1.75" />
           </button>
-
-          <!-- Theme Manager Button -->
-          <button
-            @click="handleThemeManagerClick"
-            class="p-3 mobile:p-1 rounded-lg bg-white/20 hover:bg-white/30 transition-all duration-200 border border-white/30 hover:border-white/50 backdrop-blur-sm shadow-lg hover:shadow-xl"
-            title="Open theme manager"
-          >
-            <span class="text-2xl mobile:text-base">🎨</span>
+          <button @click="handleThemeManagerClick" class="nav-icon-btn" title="Open theme manager">
+            <Palette :size="17" :stroke-width="1.75" />
           </button>
         </div>
       </div>
@@ -112,8 +106,10 @@
     <!-- Error message -->
     <div
       v-if="error"
-      class="fixed bottom-4 left-4 mobile:bottom-3 mobile:left-3 mobile:right-3 bg-red-100 border border-red-400 text-red-700 px-3 py-2 mobile:px-2 mobile:py-1.5 rounded mobile:text-xs"
+      class="fixed bottom-4 left-4 mobile:bottom-3 mobile:left-3 mobile:right-3 z-50 inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm mobile:text-xs bg-[var(--theme-bg-primary)] border border-[var(--theme-accent-error)]/40 text-[var(--theme-accent-error)]"
+      style="box-shadow: 0 6px 20px -6px rgba(20, 20, 19, 0.18)"
     >
+      <AlertTriangle :size="15" :stroke-width="1.75" class="shrink-0" />
       {{ error }}
     </div>
     
@@ -148,6 +144,8 @@ import LivePulseChart from './components/LivePulseChart.vue';
 import ThemeManager from './components/ThemeManager.vue';
 import ToastNotification from './components/ToastNotification.vue';
 import AgentSwimLaneContainer from './components/AgentSwimLaneContainer.vue';
+import SpikeMark from './components/SpikeMark.vue';
+import { Trash2, SlidersHorizontal, Palette, AlertTriangle } from 'lucide-vue-next';
 import { WS_URL } from './config';
 
 // WebSocket connection
@@ -229,7 +227,39 @@ const handleClearClick = () => {
 
 // Debug handler for theme manager
 const handleThemeManagerClick = () => {
-  console.log('Theme manager button clicked!');
   showThemeManager.value = true;
 };
 </script>
+
+<style scoped>
+.nav-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  color: var(--theme-text-secondary);
+  border: 1px solid transparent;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.nav-icon-btn:hover {
+  background-color: var(--theme-hover-bg);
+  color: var(--theme-text-primary);
+  border-color: var(--theme-border-primary);
+}
+
+.nav-icon-btn--active {
+  color: var(--theme-primary);
+  border-color: var(--theme-border-primary);
+  background-color: var(--theme-bg-tertiary);
+}
+
+@media (max-width: 699px) {
+  .nav-icon-btn {
+    width: 38px;
+    height: 38px;
+  }
+}
+</style>

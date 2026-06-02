@@ -16,6 +16,39 @@ import { PREDEFINED_THEME_NAMES, COLOR_REGEX, RGBA_REGEX } from '../types/theme'
 
 // Predefined themes configuration
 const PREDEFINED_THEMES: Record<ThemeName, PredefinedTheme> = {
+  anthropic: {
+    name: 'anthropic',
+    displayName: 'Anthropic',
+    description: 'Warm cream canvas with coral accent — editorial, on-brand',
+    cssClass: 'theme-anthropic',
+    preview: { primary: '#faf9f5', secondary: '#efe9de', accent: '#cc785c' },
+    colors: {
+      primary: '#cc785c',
+      primaryHover: '#a9583e',
+      primaryLight: '#efe9de',
+      primaryDark: '#a9583e',
+      bgPrimary: '#faf9f5',
+      bgSecondary: '#f5f0e8',
+      bgTertiary: '#efe9de',
+      bgQuaternary: '#e8e0d2',
+      textPrimary: '#141413',
+      textSecondary: '#3d3d3a',
+      textTertiary: '#6c6a64',
+      textQuaternary: '#8e8b82',
+      borderPrimary: '#e6dfd8',
+      borderSecondary: '#d8cfc2',
+      borderTertiary: '#c4b8a8',
+      accentSuccess: '#5db872',
+      accentWarning: '#d4a017',
+      accentError: '#c64545',
+      accentInfo: '#5db8a6',
+      shadow: 'rgba(20, 20, 19, 0.06)',
+      shadowLg: 'rgba(20, 20, 19, 0.10)',
+      hoverBg: 'rgba(20, 20, 19, 0.04)',
+      activeBg: 'rgba(20, 20, 19, 0.08)',
+      focusRing: '#cc785c'
+    }
+  },
   light: {
     name: 'light',
     displayName: 'Light',
@@ -417,7 +450,7 @@ const PREDEFINED_THEMES: Record<ThemeName, PredefinedTheme> = {
 export function useThemes() {
   // State
   const state = ref<ThemeState>({
-    currentTheme: 'light',
+    currentTheme: 'anthropic',
     customThemes: [],
     isCustomTheme: false,
     isLoading: false,
@@ -714,17 +747,14 @@ export function useThemes() {
     if (savedTheme) {
       setTheme(savedTheme);
     } else {
-      // Detect system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setTheme(prefersDark ? 'dark' : 'light');
+      // Default to the Anthropic editorial theme
+      setTheme('anthropic');
     }
   };
 
   // Manager state functions
   const openThemeManager = () => {
-    console.log('Opening theme manager...', managerState.value.isOpen);
     managerState.value.isOpen = true;
-    console.log('Theme manager state after:', managerState.value.isOpen);
   };
 
   const closeThemeManager = () => {
