@@ -108,14 +108,17 @@ def main():
     # was dropped on refresh and read by nothing on the client (consumers read
     # from `payload.*`). See payload above for the full hook input.
 
-    # Handle --add-chat option
-    if args.add_chat and 'transcript_path' in input_data:
-        transcript_path = input_data['transcript_path']
-        if os.path.exists(transcript_path):
+    # Handle --add-chat option. For SubagentStop the subagent's own transcript
+    # lives in a separate file (agent_transcript_path); prefer it so the event
+    # carries the subagent's conversation, not the parent session's. Falls back
+    # to transcript_path (the main session) for all other events.
+    if args.add_chat:
+        chat_path = input_data.get('agent_transcript_path') or input_data.get('transcript_path')
+        if chat_path and os.path.exists(chat_path):
             # Read .jsonl file and convert to JSON array
             chat_data = []
             try:
-                with open(transcript_path, 'r') as f:
+                with open(chat_path, 'r') as f:
                     for line in f:
                         line = line.strip()
                         if line:
@@ -123,7 +126,7 @@ def main():
                                 chat_data.append(json.loads(line))
                             except json.JSONDecodeError:
                                 pass  # Skip invalid lines
-                
+
                 # Add chat to event data
                 event_data['chat'] = chat_data
             except Exception as e:

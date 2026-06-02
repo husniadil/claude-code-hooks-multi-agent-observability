@@ -80,7 +80,7 @@
           },
           {
             "type": "command",
-            "command": "uv run $CLAUDE_PROJECT_DIR/.claude/hooks/send_event.py --source-app cc-hook-multi-agent-obvs --event-type SubagentStop",
+            "command": "uv run $CLAUDE_PROJECT_DIR/.claude/hooks/send_event.py --source-app cc-hook-multi-agent-obvs --event-type SubagentStop --add-chat",
             "async": true
           }
         ]
