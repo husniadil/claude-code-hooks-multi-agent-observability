@@ -85,8 +85,11 @@ To integrate the observability hooks into your projects:
            }
          ]
        }]
-       // ... (similar patterns for all 12 hook events: Notification, Stop, SubagentStop,
-      //      SubagentStart, PreCompact, SessionStart, SessionEnd, PermissionRequest, PostToolUseFailure)
+       // ... (similar patterns for all 26 observed hook events: Notification, Stop, SubagentStop,
+      //      SubagentStart, PreCompact, SessionStart, SessionEnd, PermissionRequest, PostToolUseFailure,
+      //      TaskCreated, TaskCompleted, TeammateIdle, PostCompact, StopFailure, PermissionDenied,
+      //      PostToolBatch, ConfigChange, CwdChanged, InstructionsLoaded, UserPromptExpansion, Setup,
+      //      Elicitation, ElicitationResult — see "Hook Coverage" below)
      }
    }
    ```
@@ -176,7 +179,7 @@ claude-code-hooks-multi-agent-observability/
 │
 ├── .claude/                # Claude Code integration
 │   ├── hooks/             # Hook scripts (Python with uv)
-│   │   ├── send_event.py          # Universal event sender (all 12 event types)
+│   │   ├── send_event.py          # Universal event sender (all 26 observed event types)
 │   │   ├── pre_tool_use.py        # Tool validation, blocking & summarization
 │   │   ├── post_tool_use.py       # Result logging with MCP tool detection
 │   │   ├── post_tool_use_failure.py # Tool failure logging
@@ -203,7 +206,7 @@ claude-code-hooks-multi-agent-observability/
 │   ├── status_lines/      # Status line scripts
 │   │   └── status_line_v6.py # Context window usage display
 │   │
-│   └── settings.json      # Hook configuration (all 12 events)
+│   └── settings.json      # Hook configuration (all 26 observed events)
 │
 ├── justfile               # Task runner recipes (just start, just stop, etc.)
 │
@@ -224,7 +227,7 @@ claude-code-hooks-multi-agent-observability/
 The hook system intercepts Claude Code lifecycle events:
 
 - **`send_event.py`**: Core script that sends event data to the observability server
-  - Supports all 12 hook event types with event-specific field forwarding
+  - Supports all 26 observed hook event types (see "Hook Coverage")
   - Supports `--add-chat` flag for including conversation history
   - Forwards event-specific fields (`tool_name`, `tool_use_id`, `agent_id`, `notification_type`, etc.) as top-level properties for easier querying
   - Validates server connectivity before sending
@@ -319,6 +322,35 @@ Vue 3 application with real-time visualization:
 | UserPromptSubmit   | 💬     | User prompt submission | Session-based | Prompt: _"user message"_ (italic)    |
 | SessionStart       | 🚀     | Session started        | Session-based | Source, model & agent type           |
 | SessionEnd         | 🏁     | Session ended          | Session-based | End reason (clear/logout/exit/other) |
+| UserPromptExpansion | 🪄     | Command expands to prompt | Session-based | Expanded command name             |
+| PostToolBatch      | 🧺     | Parallel tool batch resolved | Session-based | Batch of tool calls            |
+| PermissionDenied   | ⛔     | Tool denied by auto mode | Session-based | Tool name & denial reason          |
+| StopFailure        | 💥     | Turn ended on API error | Session-based | Error type                          |
+| PostCompact        | 📭     | After context compaction | Session-based | Trigger (manual/auto)             |
+| TaskCreated        | 📋     | Task created (TaskCreate) | Session-based | Task subject, teammate & team     |
+| TaskCompleted      | ☑️     | Task marked completed   | Session-based | Task subject, teammate & team       |
+| TeammateIdle       | 😴     | Agent-team teammate idling | Session-based | Teammate & team name             |
+| ConfigChange       | ⚙️     | Config file changed     | Session-based | Config source                       |
+| CwdChanged         | 📂     | Working directory changed | Session-based | New cwd                           |
+| InstructionsLoaded | 📜     | CLAUDE.md / rules loaded | Session-based | Load reason                        |
+| Setup              | 🛠️     | `--init`/`--maintenance` setup | Session-based | Triggering CLI flag         |
+| Elicitation        | ❔     | MCP server requests input | Session-based | MCP server name                   |
+| ElicitationResult  | 📨     | MCP elicitation answered | Session-based | MCP server name                    |
+
+### Hook Coverage (26 of 30 documented events)
+
+This system observes 26 of the 30 hook events in the [official reference](hooks_docs/hooks.md). All handlers are **passive**: they log the event and exit 0 without writing to stdout, so they never block a tool call, deny a permission, or alter any event outcome.
+
+Four events are deliberately **not** observed because they don't fit a passive observe-only model:
+
+| Event | Why it's excluded |
+| ----- | ----------------- |
+| `WorktreeCreate` | Replaces the default VCS behavior — a logger that doesn't print a worktree path would make worktree creation fail. |
+| `WorktreeRemove`  | Unverified whether registering the hook suppresses git's own cleanup; skipped out of caution. |
+| `FileChanged`     | Its matcher *is* the watch-list of filenames; generic registration watches nothing meaningful. |
+| `MessageDisplay`  | High-frequency display event (fires while assistant text streams) — would flood the server. |
+
+`FileChanged` (with an explicit filename list) and `MessageDisplay` (accepting the volume) can be added as opt-ins if needed.
 
 ### UserPromptSubmit Event (v1.0.54+)
 
