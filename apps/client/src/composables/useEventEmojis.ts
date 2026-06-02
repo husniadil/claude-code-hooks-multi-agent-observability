@@ -14,6 +14,17 @@ const eventTypeToEmoji: Record<string, string> = {
   'TaskCreated': '📋',
   'TaskCompleted': '☑️',
   'TeammateIdle': '😴',
+  'PostCompact': '📭',
+  'StopFailure': '💥',
+  'PermissionDenied': '⛔',
+  'PostToolBatch': '🧺',
+  'ConfigChange': '⚙️',
+  'CwdChanged': '📂',
+  'InstructionsLoaded': '📜',
+  'UserPromptExpansion': '🪄',
+  'Setup': '🛠️',
+  'Elicitation': '❔',
+  'ElicitationResult': '📨',
   // Default
   'default': '❓'
 };

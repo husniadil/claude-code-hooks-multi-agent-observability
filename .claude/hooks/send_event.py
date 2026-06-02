@@ -11,10 +11,17 @@
 Multi-Agent Observability Hook Script
 Sends Claude Code hook events to the observability server.
 
-Supported event types (15 total):
-  SessionStart, SessionEnd, UserPromptSubmit, PreToolUse, PostToolUse,
-  PostToolUseFailure, PermissionRequest, Notification, SubagentStart,
-  SubagentStop, Stop, PreCompact, TaskCreated, TaskCompleted, TeammateIdle
+Supported event types (26 total):
+  SessionStart, SessionEnd, UserPromptSubmit, UserPromptExpansion, PreToolUse,
+  PostToolUse, PostToolUseFailure, PostToolBatch, PermissionRequest,
+  PermissionDenied, Notification, SubagentStart, SubagentStop, Stop,
+  StopFailure, PreCompact, PostCompact, TaskCreated, TaskCompleted,
+  TeammateIdle, ConfigChange, CwdChanged, InstructionsLoaded, Setup,
+  Elicitation, ElicitationResult
+
+Not observed (don't fit the passive observe-only model):
+  WorktreeCreate/WorktreeRemove (replace VCS behavior), FileChanged (matcher is
+  the watch-list), MessageDisplay (high-frequency display event)
 """
 
 import json
