@@ -10,7 +10,12 @@
 
       <!-- Modal -->
       <div
-        class="relative bg-[var(--theme-bg-primary)] border border-[var(--theme-border-primary)] rounded-xl mobile:rounded-none flex flex-col overflow-hidden z-10 mobile:w-full mobile:h-full mobile:fixed mobile:inset-0"
+        ref="modalRef"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="chat-transcript-title"
+        tabindex="-1"
+        class="relative bg-[var(--theme-bg-primary)] border border-[var(--theme-border-primary)] rounded-xl mobile:rounded-none flex flex-col overflow-hidden z-10 mobile:w-full mobile:h-full mobile:fixed mobile:inset-0 focus:outline-none"
         :style="{ width: '85vw', height: '85vh', boxShadow: '0 24px 60px -12px rgba(20, 20, 19, 0.35)' }"
         :class="{ 'mobile:!w-full mobile:!h-full': true }"
         @click.stop
@@ -18,7 +23,7 @@
           <!-- Header -->
           <div class="flex-shrink-0 bg-[var(--theme-bg-primary)] border-b border-[var(--theme-border-primary)] p-5 mobile:p-3">
             <div class="flex items-center justify-between mb-4 mobile:mb-3">
-              <h2 class="inline-flex items-center gap-2 font-display text-2xl mobile:text-lg leading-none text-[var(--theme-text-primary)] tracking-tight">
+              <h2 id="chat-transcript-title" class="inline-flex items-center gap-2 font-display text-2xl mobile:text-lg leading-none text-[var(--theme-text-primary)] tracking-tight">
                 <MessageSquare :size="20" :stroke-width="1.75" class="text-[var(--theme-text-tertiary)]" />
                 Transcript
                 <span class="font-sans text-sm font-normal text-[var(--theme-text-quaternary)]">{{ chat.length }} messages</span>
@@ -107,8 +112,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
+import { ref, computed, watch } from 'vue';
 import ChatTranscript from './ChatTranscript.vue';
+import { useModalA11y } from '../composables/useModalA11y';
 import { MessageSquare, Search, X, Copy, Check, User, Bot, Settings, Wrench, CircleCheck, BookOpen, PenLine, Pencil, FileSearch } from 'lucide-vue-next';
 
 const props = defineProps<{
@@ -164,6 +170,9 @@ const clearSearch = () => {
 const close = () => {
   emit('close');
 };
+
+const modalRef = ref<HTMLElement | null>(null);
+useModalA11y(() => props.isOpen, modalRef, close);
 
 const copyAllMessages = async () => {
   try {
@@ -328,21 +337,6 @@ const filteredChat = computed(() => {
     const matchesFilterCondition = matchesFilters(item);
     return matchesQueryCondition && matchesFilterCondition;
   });
-});
-
-// Handle ESC key
-const handleKeydown = (e: KeyboardEvent) => {
-  if (e.key === 'Escape' && props.isOpen) {
-    close();
-  }
-};
-
-onMounted(() => {
-  document.addEventListener('keydown', handleKeydown);
-});
-
-onUnmounted(() => {
-  document.removeEventListener('keydown', handleKeydown);
 });
 
 // Reset search when modal closes

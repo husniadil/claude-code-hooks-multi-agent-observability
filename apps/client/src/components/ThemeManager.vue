@@ -10,14 +10,19 @@
 
       <!-- Modal -->
       <div
-        class="relative bg-[var(--theme-bg-primary)] border border-[var(--theme-border-primary)] rounded-xl flex flex-col overflow-hidden z-10"
+        ref="modalRef"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="theme-manager-title"
+        tabindex="-1"
+        class="relative bg-[var(--theme-bg-primary)] border border-[var(--theme-border-primary)] rounded-xl flex flex-col overflow-hidden z-10 focus:outline-none"
         style="width: 75vw; height: 75vh; box-shadow: 0 24px 60px -12px rgba(20, 20, 19, 0.35)"
         @click.stop
       >
         <!-- Header -->
         <div class="flex-shrink-0 bg-[var(--theme-bg-primary)] border-b border-[var(--theme-border-primary)] p-5">
           <div class="flex items-center justify-between">
-            <h2 class="inline-flex items-center gap-2 font-display text-2xl leading-none text-[var(--theme-text-primary)] tracking-tight">
+            <h2 id="theme-manager-title" class="inline-flex items-center gap-2 font-display text-2xl leading-none text-[var(--theme-text-primary)] tracking-tight">
               <Palette :size="20" :stroke-width="1.75" class="text-[var(--theme-text-tertiary)]" />
               Themes
             </h2>
@@ -86,11 +91,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { Palette, X, Check } from 'lucide-vue-next';
 import { useThemes } from '../composables/useThemes';
+import { useModalA11y } from '../composables/useModalA11y';
 
-defineProps<{
+const props = defineProps<{
   isOpen: boolean;
 }>();
 
@@ -113,4 +119,7 @@ const selectTheme = (themeName: string) => {
 const close = () => {
   emit('close');
 };
+
+const modalRef = ref<HTMLElement | null>(null);
+useModalA11y(() => props.isOpen, modalRef, close);
 </script>
