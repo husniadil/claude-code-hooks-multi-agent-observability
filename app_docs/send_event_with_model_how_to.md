@@ -17,12 +17,14 @@ Claude Code hooks receive a `transcript_path` in their stdin, which points to a 
 
 We implement a 60-second cache to avoid repeatedly parsing the transcript file.
 
+> **Status: disabled by default.** `model_extractor.py` ships with `ENABLE_CACHING = False`, so the current default **bypasses the cache and reads the transcript on every call**. Extraction loads the whole file into memory (`readlines()`) and scans from the end for the latest assistant `model` (the JSON parse stops at the first match, but the full file is still read) — exactly the I/O cost this cache was built to avoid. The caching path is implemented and ready; flip `ENABLE_CACHING = True` to use it. The rest of this section describes that opt-in behavior.
+
 ### Cache Strategy
 
-1. **Cache Location**: `.claude/data/claude-model-cache/{session_id}.json`
-   - **Important**: Cache is stored **locally in your project** at `.claude/data/`, NOT globally in `~/.claude/`
-   - Uses relative path from `model_extractor.py` file location
-   - Each project has its own independent cache
+1. **Cache Location**: `~/.claude/data/claude-model-cache/{session_id}.json`
+   - Stored **globally** under your home directory via `Path.home()` (NOT inside the project)
+   - Shared across all projects on the machine
+   - Keyed by session ID, so sessions never collide even across projects
 2. **Cache TTL**: 60 seconds (configurable)
 3. **Cache Key**: Session ID (unique per Claude Code session)
 4. **Cache Structure**:
@@ -39,9 +41,9 @@ We implement a 60-second cache to avoid repeatedly parsing the transcript file.
 - Model changes are rare (only on explicit `/model` command)
 - 60-second freshness is acceptable for observability
 - Cache is session-specific (different sessions = different cache files)
-- Cache is project-local (different projects = independent caches)
+- Cache lives under `~/.claude/data/` (global), keyed by session ID, so sessions never collide
 - Old caches naturally expire and get overwritten
-- Relative path ensures cache works regardless of current working directory
+- Home-based path ensures cache works regardless of current working directory
 
 ---
 
@@ -63,6 +65,10 @@ import time
 from pathlib import Path
 
 
+# Set to False to disable caching and always read from transcript
+ENABLE_CACHING = False
+
+
 def get_model_from_transcript(session_id: str, transcript_path: str, ttl: int = 60) -> str:
     """
     Extract model name from transcript with file-based caching.
@@ -75,17 +81,15 @@ def get_model_from_transcript(session_id: str, transcript_path: str, ttl: int = 
     Returns:
         Model name string (e.g., "claude-haiku-4-5-20251001") or empty string if not found
     """
-    # Set up cache directory relative to this file location
-    # __file__ is .claude/hooks/utils/model_extractor.py
-    # We want .claude/data/claude-model-cache/
-    cache_dir = Path(__file__).parent.parent.parent / "data" / "claude-model-cache"
+    # Set up cache directory under the user's home (global, shared across projects)
+    cache_dir = Path.home() / ".claude" / "data" / "claude-model-cache"
     cache_dir.mkdir(parents=True, exist_ok=True)
 
     cache_file = cache_dir / f"{session_id}.json"
     current_time = time.time()
 
-    # Try to read from cache
-    if cache_file.exists():
+    # Try to read from cache (only if caching is enabled)
+    if ENABLE_CACHING and cache_file.exists():
         try:
             with open(cache_file, 'r') as f:
                 cache_data = json.load(f)
@@ -101,18 +105,19 @@ def get_model_from_transcript(session_id: str, transcript_path: str, ttl: int = 
     # Cache miss or stale - extract from transcript
     model_name = extract_model_from_transcript(transcript_path)
 
-    # Save to cache
-    try:
-        cache_data = {
-            'model': model_name,
-            'timestamp': current_time,
-            'ttl': ttl
-        }
-        with open(cache_file, 'w') as f:
-            json.dump(cache_data, f)
-    except IOError:
-        # Cache write failed, not critical - continue without cache
-        pass
+    # Save to cache (only if caching is enabled)
+    if ENABLE_CACHING:
+        try:
+            cache_data = {
+                'model': model_name,
+                'timestamp': current_time,
+                'ttl': ttl
+            }
+            with open(cache_file, 'w') as f:
+                json.dump(cache_data, f)
+        except IOError:
+            # Cache write failed, not critical - continue without cache
+            pass
 
     return model_name
 
@@ -275,7 +280,7 @@ Send this JSON structure to your observability server:
 
 ```
 1. Hook fires → send_event.py runs
-2. Check cache: .claude/data/claude-model-cache/{session_id}.json (in project)
+2. Check cache: ~/.claude/data/claude-model-cache/{session_id}.json (global)
 3. Cache file doesn't exist
 4. Read transcript file (3+ MB)
 5. Parse JSONL line by line in REVERSE
@@ -289,7 +294,7 @@ Send this JSON structure to your observability server:
 
 ```
 1. Hook fires → send_event.py runs
-2. Check cache: .claude/data/claude-model-cache/{session_id}.json (in project)
+2. Check cache: ~/.claude/data/claude-model-cache/{session_id}.json (global)
 3. Cache file exists
 4. Read cache (tiny JSON file, < 1 KB)
 5. Check timestamp: current_time - cache_timestamp < 60s?
@@ -302,7 +307,7 @@ Send this JSON structure to your observability server:
 
 ```
 1. Hook fires → send_event.py runs
-2. Check cache: .claude/data/claude-model-cache/{session_id}.json (in project)
+2. Check cache: ~/.claude/data/claude-model-cache/{session_id}.json (global)
 3. Cache file exists
 4. Read cache
 5. Check timestamp: current_time - cache_timestamp < 60s?
@@ -359,8 +364,8 @@ Send this JSON structure to your observability server:
 echo '{"session_id":"test-123","transcript_path":"/path/to/transcript.jsonl"}' | \
   python .claude/hooks/send_event.py
 
-# Check cache was created (in project directory)
-cat .claude/data/claude-model-cache/test-123.json
+# Check cache was created (under your home directory)
+cat ~/.claude/data/claude-model-cache/test-123.json
 ```
 
 Expected output:
@@ -415,7 +420,7 @@ print(f"Extracted model: {model_name}", file=sys.stderr)
 ### Cache Not Working
 
 **Check**:
-1. Cache directory exists in project: `.claude/data/claude-model-cache/`
+1. Cache directory exists under home: `~/.claude/data/claude-model-cache/`
 2. Cache directory is writable (check project permissions)
 3. Session ID is consistent across hook calls
 
@@ -436,7 +441,7 @@ print(f"Cache age: {cache_age}s (TTL: {ttl}s)", file=sys.stderr)
 
 **Optimize**:
 - Increase TTL to 120s if model changes are very rare
-- Use a faster storage location (e.g., `/tmp/` instead of `.claude/data/`)
+- Use a faster storage location (e.g., `/tmp/` instead of `~/.claude/data/`)
 - Consider in-memory caching if running a persistent service
 
 ---
@@ -478,7 +483,7 @@ def get_model_from_transcript_memory(session_id: str, transcript_path: str) -> s
 ## Summary
 
 1. **Extract model from transcript** - Read `.jsonl` file, find most recent assistant message
-2. **Implement 60-second cache** - Store in `.claude/data/claude-model-cache/{session_id}.json` (in project)
+2. **Implement 60-second cache** (opt-in via `ENABLE_CACHING`) - Store in `~/.claude/data/claude-model-cache/{session_id}.json` (global)
 3. **Send model_name with events** - Include in your event payload to observability server
 4. **Handle empty model** - Some hooks fire before first assistant message
 
