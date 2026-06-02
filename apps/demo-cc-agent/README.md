@@ -52,7 +52,7 @@ The following events are captured and sent:
 Most hooks use the `--summarize` flag to include a brief summary of the event data for easier monitoring.
 
 ### Chat History
-The Stop event includes the full chat history with the `--add-chat` flag, allowing you to review complete conversations.
+The Stop event includes the conversation with the `--add-chat` flag. The transcript is an append-only tree, so the hook stores only the **live branch** (the active path), dropping rewound/compacted-away branches instead of dumping every line.
 
 ### Text-to-Speech
 The notification hook supports TTS via ElevenLabs or OpenAI when API keys are configured.

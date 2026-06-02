@@ -232,7 +232,7 @@ const render = () => {
   renderer.drawAxes();
   renderer.drawTimeLabels(timeRange.value);
   // No glyph labels on bars — keep them clean; details surface via the hover tooltip.
-  renderer.drawBars(data, maxValue, 1, undefined, getHexColorForSession);
+  renderer.drawBars(data, maxValue, 1, getHexColorForSession);
 };
 
 const handleWindowResize = () => {

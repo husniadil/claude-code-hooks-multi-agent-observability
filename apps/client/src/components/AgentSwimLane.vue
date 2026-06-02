@@ -214,7 +214,7 @@ const render = () => {
   renderer.drawBackground();
   renderer.drawAxes();
   renderer.drawTimeLabels(props.timeRange);
-  renderer.drawBars(data, maxValue, 1, undefined, getHexColorForSession);
+  renderer.drawBars(data, maxValue, 1, getHexColorForSession);
 };
 
 const handleResize = () => {

@@ -172,7 +172,7 @@ claude-code-hooks-multi-agent-observability/
 │       │   │   ├── useWebSocket.ts        # WebSocket connection logic
 │       │   │   ├── useEventColors.ts      # Color assignment system
 │       │   │   ├── useChartData.ts        # Chart data aggregation
-│       │   │   └── useEventEmojis.ts      # Event type emoji mapping
+│       │   │   └── useEventIcons.ts       # Event type & tool Lucide icon mapping
 │       │   ├── utils/
 │       │   │   └── chartRenderer.ts       # Canvas chart rendering
 │       │   └── types.ts    # TypeScript interfaces
@@ -283,17 +283,16 @@ Vue 3 application with real-time visualization:
   - Auto-scroll with manual override
   - Event limiting (configurable via `VITE_MAX_EVENTS_TO_DISPLAY`)
 
-- **Tool Emoji System**:
-  - Each tool type has a dedicated emoji (Bash: 💻, Read: 📖, Write: ✍️, Edit: ✏️, Task: 🤖, etc.)
-  - Tool events show combo emojis: event emoji + tool emoji (e.g., 🔧💻 for PreToolUse:Bash)
-  - MCP tools display with 🔌 prefix
+- **Tool Icon System** (Lucide via `lucide-vue-next`):
+  - Each tool type has a dedicated icon (Bash: Terminal, Read: BookOpen, Write: PenLine, Edit: Pencil, Task: Bot, etc.)
+  - Tool events show the event icon alongside the tool icon (e.g. Wrench + Terminal for PreToolUse:Bash)
+  - MCP tools display with a Plug icon
   - Tool name badge displayed alongside event type in the timeline
 
 - **Live Pulse Chart**:
   - Canvas-based real-time visualization
   - Session-specific colors for each bar
-  - Event type + tool combo emojis displayed on bars
-  - Smooth animations and glow effects
+  - Clean bars — event details surface via the hover tooltip
   - Responsive to filter changes
 
 ## 🔄 Data Flow
@@ -310,34 +309,36 @@ Vue 3 application with real-time visualization:
 
 ## 🎨 Event Types & Visualization
 
-| Event Type         | Emoji | Purpose                | Color Coding  | Special Display                      |
-| ------------------ | ----- | ---------------------- | ------------- | ------------------------------------ |
-| PreToolUse         | 🔧     | Before tool execution  | Session-based | Tool name + tool emoji & details     |
-| PostToolUse        | ✅     | After tool completion  | Session-based | Tool name + tool emoji & results     |
-| PostToolUseFailure | ❌     | Tool execution failed  | Session-based | Error details & interrupt status     |
-| PermissionRequest  | 🔐     | Permission requested   | Session-based | Tool name & permission suggestions   |
-| Notification       | 🔔     | User interactions      | Session-based | Notification message & type          |
-| Stop               | 🛑     | Response completion    | Session-based | Summary & chat transcript            |
-| SubagentStart      | 🟢     | Subagent started       | Session-based | Agent ID & type                      |
-| SubagentStop       | 👥     | Subagent finished      | Session-based | Agent details & transcript path      |
-| PreCompact         | 📦     | Context compaction     | Session-based | Trigger & custom instructions        |
-| UserPromptSubmit   | 💬     | User prompt submission | Session-based | Prompt: _"user message"_ (italic)    |
-| SessionStart       | 🚀     | Session started        | Session-based | Source, model & agent type           |
-| SessionEnd         | 🏁     | Session ended          | Session-based | End reason (clear/logout/exit/other) |
-| UserPromptExpansion | 🪄     | Command expands to prompt | Session-based | Expanded command name             |
-| PostToolBatch      | 🧺     | Parallel tool batch resolved | Session-based | Batch of tool calls            |
-| PermissionDenied   | ⛔     | Tool denied by auto mode | Session-based | Tool name & denial reason          |
-| StopFailure        | 💥     | Turn ended on API error | Session-based | Error type                          |
-| PostCompact        | 📭     | After context compaction | Session-based | Trigger (manual/auto)             |
-| TaskCreated        | 📋     | Task created (TaskCreate) | Session-based | Task subject, teammate & team     |
-| TaskCompleted      | ☑️     | Task marked completed   | Session-based | Task subject, teammate & team       |
-| TeammateIdle       | 😴     | Agent-team teammate idling | Session-based | Teammate & team name             |
-| ConfigChange       | ⚙️     | Config file changed     | Session-based | Config source                       |
-| CwdChanged         | 📂     | Working directory changed | Session-based | New cwd                           |
-| InstructionsLoaded | 📜     | CLAUDE.md / rules loaded | Session-based | Load reason                        |
-| Setup              | 🛠️     | `--init`/`--maintenance` setup | Session-based | Triggering CLI flag         |
-| Elicitation        | ❔     | MCP server requests input | Session-based | MCP server name                   |
-| ElicitationResult  | 📨     | MCP elicitation answered | Session-based | MCP server name                    |
+Icons are [Lucide](https://lucide.dev) components mapped in `useEventIcons.ts` (unknown events fall back to `Circle`).
+
+| Event Type          | Icon (Lucide)   | Purpose                        | Color Coding  | Special Display                      |
+| ------------------- | --------------- | ------------------------------ | ------------- | ------------------------------------ |
+| PreToolUse          | Wrench          | Before tool execution          | Session-based | Tool name + tool icon & details      |
+| PostToolUse         | CircleCheck     | After tool completion          | Session-based | Tool name + tool icon & results      |
+| PostToolUseFailure  | CircleX         | Tool execution failed          | Session-based | Error details & interrupt status     |
+| PermissionRequest   | Lock            | Permission requested           | Session-based | Tool name & permission suggestions   |
+| Notification        | Bell            | User interactions              | Session-based | Notification message & type          |
+| Stop                | CircleStop      | Response completion            | Session-based | Summary & chat transcript            |
+| SubagentStart       | Bot             | Subagent started               | Session-based | Agent ID & type                      |
+| SubagentStop        | Users           | Subagent finished              | Session-based | Agent details & transcript path      |
+| PreCompact          | Archive         | Context compaction             | Session-based | Trigger & custom instructions        |
+| UserPromptSubmit    | CornerDownLeft  | User prompt submission         | Session-based | Prompt: _"user message"_ (italic)    |
+| SessionStart        | LogIn           | Session started                | Session-based | Source, model & agent type           |
+| SessionEnd          | LogOut          | Session ended                  | Session-based | End reason (clear/logout/exit/other) |
+| UserPromptExpansion | WandSparkles    | Command expands to prompt      | Session-based | Expanded command name                |
+| PostToolBatch       | Layers          | Parallel tool batch resolved   | Session-based | Batch of tool calls                  |
+| PermissionDenied    | Ban             | Tool denied by auto mode       | Session-based | Tool name & denial reason            |
+| StopFailure         | OctagonX        | Turn ended on API error        | Session-based | Error type                           |
+| PostCompact         | ArchiveRestore  | After context compaction       | Session-based | Trigger (manual/auto)                |
+| TaskCreated         | ClipboardPlus   | Task created (TaskCreate)      | Session-based | Task subject, teammate & team        |
+| TaskCompleted       | ClipboardCheck  | Task marked completed          | Session-based | Task subject, teammate & team        |
+| TeammateIdle        | Moon            | Agent-team teammate idling     | Session-based | Teammate & team name                 |
+| ConfigChange        | Settings        | Config file changed            | Session-based | Config source                        |
+| CwdChanged          | FolderTree      | Working directory changed      | Session-based | New cwd                              |
+| InstructionsLoaded  | ScrollText      | CLAUDE.md / rules loaded       | Session-based | Load reason                          |
+| Setup               | Hammer          | `--init`/`--maintenance` setup | Session-based | Triggering CLI flag                  |
+| Elicitation         | MessageCircleMore | MCP server requests input    | Session-based | MCP server name                      |
+| ElicitationResult   | MailCheck       | MCP elicitation answered       | Session-based | MCP server name                      |
 
 ### Hook Coverage (26 of 30 documented events)
 
