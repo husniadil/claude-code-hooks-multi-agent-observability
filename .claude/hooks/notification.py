@@ -127,13 +127,14 @@ def main():
         with open(log_file, 'w') as f:
             json.dump(log_data, f, indent=2)
 
-        # Announce notification via TTS only if --notify flag is set
-        # Use notification_type for conditional TTS behavior:
-        # - permission_prompt: always announce (needs user attention)
-        # - idle_prompt: skip generic idle messages
-        # - auth_success, elicitation_dialog: skip TTS
+        # Announce notification via TTS only if --notify flag is set.
+        # Conditional behavior per notification_type (see Claude Code hooks docs):
+        # - permission_prompt, elicitation_dialog: announce (Claude needs user input)
+        # - idle_prompt: announce unless it's the generic idle message
+        # - auth_success, elicitation_complete, elicitation_response: skip (no action needed)
+        ANNOUNCE_TYPES = {'permission_prompt', 'elicitation_dialog'}
         if args.notify:
-            if notification_type == 'permission_prompt':
+            if notification_type in ANNOUNCE_TYPES:
                 announce_notification()
             elif notification_type == 'idle_prompt' and message != 'Claude is waiting for your input':
                 announce_notification()
