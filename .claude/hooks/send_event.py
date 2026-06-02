@@ -62,6 +62,66 @@ def send_event_to_server(event_data, server_url='http://localhost:4000/events'):
         print(f"Unexpected error: {e}", file=sys.stderr)
         return False
 
+def _is_renderable(entry):
+    """Whether a transcript line carries content the dashboard chat renders."""
+    t = entry.get('type')
+    if t in ('user', 'assistant'):
+        return True
+    if t == 'system':
+        # The client renders a system line's content and/or its toolUseID; keep
+        # those, drop blank markers (e.g. the post-compact root) that render empty.
+        return bool(entry.get('content') or entry.get('toolUseID'))
+    return False
+
+
+def reconstruct_active_chat(lines):
+    """Reduce an append-only transcript tree to its live linear conversation.
+
+    A Claude Code transcript .jsonl is an append-only TREE: each message line
+    carries `uuid` + `parentUuid`. Rewind and /compact FORK the tree — the old
+    branch stays in the file and a new branch is appended. Dumping every line
+    (the old behavior) therefore stored dead/abandoned branches ("rewind
+    ghosts") and re-ballooned the whole history on every Stop (O(N^2) bloat).
+
+    We keep only the live branch. Invariant: Stop/SubagentStop fire right after
+    a fresh append, so the LAST physical uuid-bearing line is guaranteed to sit
+    on the live branch. Walk `parentUuid` from it to the root to get the active
+    path, then emit only the renderable message lines in file order.
+
+    Non-message metadata (file-history-snapshot, ai-title, mode, ...) and
+    attachment lines carry nothing the dashboard renders and are dropped;
+    attachment lines still participate in the walk as path links.
+
+    Returns (active_chat, pruned_messages) where pruned_messages is the number
+    of *renderable* message lines that exist in the file but were dropped for
+    sitting off the live branch (the rewind/compaction ghosts) — it excludes
+    metadata/attachment lines, which were never chat to begin with.
+    """
+    renderable_total = sum(1 for e in lines if _is_renderable(e))
+
+    nodes = {}
+    last_uuid = None
+    for entry in lines:
+        u = entry.get('uuid')
+        if u:
+            nodes[u] = entry
+            last_uuid = u
+
+    if last_uuid is None:
+        # No tree info (unexpected format) — fall back to renderable lines.
+        chat = [e for e in lines if _is_renderable(e)]
+        return chat, renderable_total - len(chat)
+
+    active = set()
+    cur = last_uuid
+    while cur and cur in nodes and cur not in active:
+        active.add(cur)
+        cur = nodes[cur].get('parentUuid')
+
+    chat = [e for e in lines if e.get('uuid') in active and _is_renderable(e)]
+    return chat, renderable_total - len(chat)
+
+
 def main():
     # Capture the timestamp as early as possible so it tracks when the hook
     # fired, not when the (now async) process finishes its transcript read /
@@ -115,20 +175,29 @@ def main():
     if args.add_chat:
         chat_path = input_data.get('agent_transcript_path') or input_data.get('transcript_path')
         if chat_path and os.path.exists(chat_path):
-            # Read .jsonl file and convert to JSON array
-            chat_data = []
+            # Read .jsonl into a list of parsed lines (file order).
+            lines = []
             try:
                 with open(chat_path, 'r') as f:
                     for line in f:
                         line = line.strip()
                         if line:
                             try:
-                                chat_data.append(json.loads(line))
+                                lines.append(json.loads(line))
                             except json.JSONDecodeError:
                                 pass  # Skip invalid lines
 
-                # Add chat to event data
-                event_data['chat'] = chat_data
+                # Prune the append-only tree to its live linear conversation so
+                # rewound/compacted-away branches aren't stored as if active.
+                chat, pruned_msgs = reconstruct_active_chat(lines)
+                event_data['chat'] = chat
+                pruned_meta = len(lines) - len(chat) - pruned_msgs
+                if pruned_msgs or pruned_meta:
+                    print(
+                        f"add-chat: kept {len(chat)} message(s); pruned "
+                        f"{pruned_msgs} off-path + {pruned_meta} non-message line(s)",
+                        file=sys.stderr,
+                    )
             except Exception as e:
                 print(f"Failed to read transcript: {e}", file=sys.stderr)
     
