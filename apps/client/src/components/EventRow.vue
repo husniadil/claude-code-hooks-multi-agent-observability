@@ -295,7 +295,7 @@ import { useEventEmojis } from '../composables/useEventEmojis';
 import ChatTranscriptModal from './ChatTranscriptModal.vue';
 import { API_BASE_URL } from '../config';
 
-const { getEmojiForToolName } = useEventEmojis();
+const { getEmojiForEventType, getEmojiForToolName } = useEventEmojis();
 
 const props = defineProps<{
   event: HookEvent;
@@ -333,21 +333,7 @@ const sessionIdShort = computed(() => {
 });
 
 const hookEmoji = computed(() => {
-  const emojiMap: Record<string, string> = {
-    'PreToolUse': '🔧',
-    'PostToolUse': '✅',
-    'PostToolUseFailure': '❌',
-    'PermissionRequest': '🔐',
-    'Notification': '🔔',
-    'Stop': '🛑',
-    'SubagentStart': '🟢',
-    'SubagentStop': '👥',
-    'PreCompact': '📦',
-    'UserPromptSubmit': '💬',
-    'SessionStart': '🚀',
-    'SessionEnd': '🏁'
-  };
-  const baseEmoji = emojiMap[props.event.hook_event_type] || '❓';
+  const baseEmoji = getEmojiForEventType(props.event.hook_event_type);
 
   // For tool events, show combo: event emoji + tool emoji (e.g., 🔧💻)
   const toolEventTypes = ['PreToolUse', 'PostToolUse', 'PostToolUseFailure', 'PermissionRequest'];
