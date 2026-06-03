@@ -271,3 +271,11 @@ ai_docs/haiku45/*
 trees/
 
 deep_docs
+
+# graphify: commit the portable graph (graph.json / GRAPH_REPORT.md / graph.html),
+# ignore machine-local state that stores absolute paths and is regenerated each run.
+hooks_docs/graphify-out/.graphify_*
+hooks_docs/graphify-out/.vocab.txt
+hooks_docs/graphify-out/manifest.json
+hooks_docs/graphify-out/cost.json
+hooks_docs/graphify-out/cache/

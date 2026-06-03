@@ -1,0 +1,207 @@
+{
+  "version": "1.0.0",
+  "gitCommitHash": "87adc214c520343a6b5950cacc0be28418ea371d",
+  "generatedAt": "2026-06-03T04:23:17.199Z",
+  "files": {
+    "external/agent-teams.md": {
+      "filePath": "external/agent-teams.md",
+      "contentHash": "7d165edf5701b49e63e5add5fc3fc93f8c5a21f78d523df750a03e849e54bb64",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 60,
+      "hasStructuralAnalysis": true
+    },
+    "external/debug-your-config.md": {
+      "filePath": "external/debug-your-config.md",
+      "contentHash": "a5f16b82f9c47c5d9a5d490cfbf229484f14d0f0c19f112b13a8e1c1301cd02f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 85,
+      "hasStructuralAnalysis": true
+    },
+    "external/env-vars.md": {
+      "filePath": "external/env-vars.md",
+      "contentHash": "37edc2203cd11d52b72be323a0f2221f5ce31ef464566e23c25738894f3814b0",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 86,
+      "hasStructuralAnalysis": true
+    },
+    "external/goal.md": {
+      "filePath": "external/goal.md",
+      "contentHash": "ee2cf124b7c80bd10c0ad60fc653323de723c95186993f350ef2d69dadde65a9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 50,
+      "hasStructuralAnalysis": true
+    },
+    "external/headless.md": {
+      "filePath": "external/headless.md",
+      "contentHash": "e82935dafb09e4c3b50e1664c35cb864ff4dc4d639caa9fcf1a3b3b6a85d630a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 78,
+      "hasStructuralAnalysis": true
+    },
+    "external/mcp.md": {
+      "filePath": "external/mcp.md",
+      "contentHash": "0fcd128dc98204e1327ca0d96f8a67ec0db13a3b30cac18aed5b1b1c6436ba98",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 145,
+      "hasStructuralAnalysis": true
+    },
+    "external/memory.md": {
+      "filePath": "external/memory.md",
+      "contentHash": "872da29ffe6a11006b5fad068e416baf099ce06b78e704744e2fc986ea741bf2",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 188,
+      "hasStructuralAnalysis": true
+    },
+    "external/model-config.md": {
+      "filePath": "external/model-config.md",
+      "contentHash": "f8c800621b476e7ebfbd04475625a35e09c156bec2ee8e40a975366e0ad24063",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 192,
+      "hasStructuralAnalysis": true
+    },
+    "external/permission-modes.md": {
+      "filePath": "external/permission-modes.md",
+      "contentHash": "f609f1c0ae4795e8cbae14d3aa77f1bd31bdacc2750b1e491d019885931c1874",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 229,
+      "hasStructuralAnalysis": true
+    },
+    "external/permissions.md": {
+      "filePath": "external/permissions.md",
+      "contentHash": "f8ec87e9c265d48bcf9e14986dc85594634306aed986b0264747a73fbe2de4e9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 323,
+      "hasStructuralAnalysis": true
+    },
+    "external/plugins-reference.md": {
+      "filePath": "external/plugins-reference.md",
+      "contentHash": "e75136c468d1407328857e55848cabffb9dc23d11d8e292bf1da97c3371a1a8d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 343,
+      "hasStructuralAnalysis": true
+    },
+    "external/plugins.md": {
+      "filePath": "external/plugins.md",
+      "contentHash": "c25181e3865828fd0592c9d931f01f60a0e58c269b863d28d1bdcbd55276c6b1",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 110,
+      "hasStructuralAnalysis": true
+    },
+    "external/security-guidance.md": {
+      "filePath": "external/security-guidance.md",
+      "contentHash": "0cc9c90fef557a305ccce4ce6d7d24a0d03f0bbf7893be5887a46ebf564cbe75",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 115,
+      "hasStructuralAnalysis": true
+    },
+    "external/settings.md": {
+      "filePath": "external/settings.md",
+      "contentHash": "12ef9d13ec409c8519acc7654db29f7bfcb53ebc5255da62d727f563adc6bdd5",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 421,
+      "hasStructuralAnalysis": true
+    },
+    "external/skills.md": {
+      "filePath": "external/skills.md",
+      "contentHash": "008986b8c411dd069a4b324579f64b0999d94b19d3ed886474b06a6abea2ef1b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 40,
+      "hasStructuralAnalysis": true
+    },
+    "external/statusline.md": {
+      "filePath": "external/statusline.md",
+      "contentHash": "08098c1b83dbb025aa83fee793457db0710aeb1084f603a1218ea11db1030939",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 235,
+      "hasStructuralAnalysis": true
+    },
+    "external/sub-agents.md": {
+      "filePath": "external/sub-agents.md",
+      "contentHash": "ed907d1c94421670d8afe5080b86e521b5d35a75753f03e759db7d6fa9c42bab",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 293,
+      "hasStructuralAnalysis": true
+    },
+    "external/worktrees.md": {
+      "filePath": "external/worktrees.md",
+      "contentHash": "eee9046373d96c706a4dd5016a87528d1b286b75bc30f20a9d5520625f53a218",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 69,
+      "hasStructuralAnalysis": true
+    },
+    "hooks-guide.md": {
+      "filePath": "hooks-guide.md",
+      "contentHash": "e5fe74353f43dc03c690cd171055bc1d2ce7a455f322b438e88f4939c2c6cfdb",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 966,
+      "hasStructuralAnalysis": true
+    },
+    "hooks.md": {
+      "filePath": "hooks.md",
+      "contentHash": "53af93ea30eb6f415b630014f309e49df0380860383ecf125e52977f5a77d0e7",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2899,
+      "hasStructuralAnalysis": true
+    }
+  }
+}

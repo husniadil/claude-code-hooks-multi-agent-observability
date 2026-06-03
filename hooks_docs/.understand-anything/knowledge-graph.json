@@ -1,0 +1,716 @@
+{
+  "version": "1.0.0",
+  "project": {
+    "name": "Claude Code Hooks Documentation",
+    "languages": [
+      "markdown"
+    ],
+    "frameworks": [],
+    "description": "A reference documentation collection for Claude Code hooks and configuration, covering hook events, the configuration schema, JSON input/output formats, and related topics such as permissions, settings, sub-agents, MCP, plugins, and skills.",
+    "analyzedAt": "2026-06-03T04:22:43.626Z",
+    "gitCommitHash": "87adc214c520343a6b5950cacc0be28418ea371d"
+  },
+  "nodes": [
+    {
+      "id": "document:external/agent-teams.md",
+      "type": "document",
+      "name": "agent-teams.md",
+      "filePath": "external/agent-teams.md",
+      "summary": "Hooks-relevant excerpts on Claude Code agent teams, covering task assign/claim flow, enforcing quality gates with hooks, the lifecycle states hooks fire on, and using subagent definitions for teammates.",
+      "tags": [
+        "documentation",
+        "agent-teams",
+        "hooks",
+        "subagents",
+        "quality-gates"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:external/debug-your-config.md",
+      "type": "document",
+      "name": "debug-your-config.md",
+      "filePath": "external/debug-your-config.md",
+      "summary": "Troubleshooting guide for inspecting what loaded into context, checking resolved settings and hooks, testing against a clean configuration, and diagnosing common config causes.",
+      "tags": [
+        "documentation",
+        "debugging",
+        "configuration",
+        "hooks",
+        "troubleshooting"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:external/env-vars.md",
+      "type": "document",
+      "name": "env-vars.md",
+      "filePath": "external/env-vars.md",
+      "summary": "Reference for setting environment variables in the shell and in settings files, their precedence, and the hooks-relevant variable rows including commonly-expected hook variables.",
+      "tags": [
+        "documentation",
+        "environment-variables",
+        "configuration",
+        "hooks",
+        "precedence"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:external/goal.md",
+      "type": "document",
+      "name": "goal.md",
+      "filePath": "external/goal.md",
+      "summary": "Overview of the goal-driven autonomous workflow, comparing it to other autonomous modes, how evaluation works, requirements, and hook-relevant non-interactive usage notes.",
+      "tags": [
+        "documentation",
+        "autonomous-workflow",
+        "hooks",
+        "evaluation",
+        "non-interactive"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:external/headless.md",
+      "type": "document",
+      "name": "headless.md",
+      "filePath": "external/headless.md",
+      "summary": "Guide to running Claude Code headless with the -p flag, covering bare mode for faster startup, auto-approving tools, permission behavior, and the system/init event reporting plugin/hook load state.",
+      "tags": [
+        "documentation",
+        "headless",
+        "hooks",
+        "permissions",
+        "automation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:external/mcp.md",
+      "type": "document",
+      "name": "mcp.md",
+      "filePath": "external/mcp.md",
+      "summary": "Hooks-relevant MCP excerpts: adding local stdio servers, pushing messages with channels, plugin-provided MCP server environment variables, dynamic auth headers, elicitation requests, and using MCP prompts as commands.",
+      "tags": [
+        "documentation",
+        "mcp",
+        "hooks",
+        "integration",
+        "authentication"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:external/memory.md",
+      "type": "document",
+      "name": "memory.md",
+      "filePath": "external/memory.md",
+      "summary": "Memory system reference covering CLAUDE.md files vs auto memory, where to place and how they load, organizing rules with .claude/rules/ (path-specific and user-level), org-wide deployment, the auto-memory trust gate, and using a hook when Claude ignores CLAUDE.md.",
+      "tags": [
+        "documentation",
+        "memory",
+        "claude-md",
+        "rules",
+        "hooks"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:external/model-config.md",
+      "type": "document",
+      "name": "model-config.md",
+      "filePath": "external/model-config.md",
+      "summary": "Model configuration reference: available models and aliases, setting the model, the opusplan setting, adjusting effort/reasoning levels, ultrathink and extended thinking, and the subagent model environment variable.",
+      "tags": [
+        "documentation",
+        "model-config",
+        "reasoning",
+        "subagents",
+        "configuration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:external/permission-modes.md",
+      "type": "document",
+      "name": "permission-modes.md",
+      "filePath": "external/permission-modes.md",
+      "summary": "Detailed guide to the available permission modes (plan, auto, acceptEdits, dontAsk, bypassPermissions), how the auto-mode classifier blocks operations and falls back, protected paths, and setting a default mode.",
+      "tags": [
+        "documentation",
+        "permissions",
+        "permission-modes",
+        "security",
+        "plan-mode"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:external/permissions.md",
+      "type": "document",
+      "name": "permissions.md",
+      "filePath": "external/permissions.md",
+      "summary": "Comprehensive permissions reference covering rule syntax and wildcards, tool-specific rules (Bash, PowerShell, Read/Edit, WebFetch, MCP, Agent), extending permissions with hooks, managed settings, and settings precedence.",
+      "tags": [
+        "documentation",
+        "permissions",
+        "security",
+        "hooks",
+        "managed-settings"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:external/plugins-reference.md",
+      "type": "document",
+      "name": "plugins-reference.md",
+      "filePath": "external/plugins-reference.md",
+      "summary": "Plugin components reference focused on hooks: hook and monitor components, installation scopes, skills-directory plugin reload behavior, manifest schema, component path fields, environment variables, directory structure, and hook troubleshooting.",
+      "tags": [
+        "documentation",
+        "plugins",
+        "hooks",
+        "reference",
+        "manifest"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:external/plugins.md",
+      "type": "document",
+      "name": "plugins.md",
+      "filePath": "external/plugins.md",
+      "summary": "Introductory plugins guide on when to use plugins vs standalone config, plugin structure, developing and testing/debugging plugins locally, and migrating existing configurations (including hooks) into plugins.",
+      "tags": [
+        "documentation",
+        "plugins",
+        "hooks",
+        "migration",
+        "configuration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:external/security-guidance.md",
+      "type": "document",
+      "name": "security-guidance.md",
+      "filePath": "external/security-guidance.md",
+      "summary": "Describes the security-guidance plugin's hook-driven checks on each file edit, end of turn, and each commit/push, with guidance on adding custom model-backed review rules and per-edit patterns, plus integration details.",
+      "tags": [
+        "documentation",
+        "security",
+        "hooks",
+        "code-review",
+        "plugin"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:external/settings.md",
+      "type": "document",
+      "name": "settings.md",
+      "filePath": "external/settings.md",
+      "summary": "Authoritative settings reference covering configuration scopes and precedence, settings files, permission and file-suggestion settings, hook configuration, managed-settings policy helpers, sensitive-file exclusion, strictPluginOnlyCustomization, and environment variables.",
+      "tags": [
+        "documentation",
+        "settings",
+        "configuration",
+        "hooks",
+        "precedence"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:external/skills.md",
+      "type": "document",
+      "name": "skills.md",
+      "filePath": "external/skills.md",
+      "summary": "Short skills excerpt covering live change detection, the frontmatter reference, and the skill content lifecycle relevant to hooks.",
+      "tags": [
+        "documentation",
+        "skills",
+        "hooks",
+        "frontmatter",
+        "lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:external/statusline.md",
+      "type": "document",
+      "name": "statusline.md",
+      "filePath": "external/statusline.md",
+      "summary": "Status line guide explaining how custom status lines work, the data available to status-line scripts (including context-window fields), subagent status lines, and hooks-relevant troubleshooting.",
+      "tags": [
+        "documentation",
+        "statusline",
+        "hooks",
+        "customization",
+        "subagents"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:external/sub-agents.md",
+      "type": "document",
+      "name": "sub-agents.md",
+      "filePath": "external/sub-agents.md",
+      "summary": "Subagents reference covering scope selection, supported frontmatter fields, conditional rules with hooks, defining hooks in subagent frontmatter and project-level hooks for subagent events, with a database-query-validator example.",
+      "tags": [
+        "documentation",
+        "subagents",
+        "hooks",
+        "frontmatter",
+        "configuration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:external/worktrees.md",
+      "type": "document",
+      "name": "worktrees.md",
+      "filePath": "external/worktrees.md",
+      "summary": "Worktrees guide covering starting Claude in a worktree, choosing the base branch, copying gitignored files, and the WorktreeCreate/WorktreeRemove hooks for non-git version control.",
+      "tags": [
+        "documentation",
+        "worktrees",
+        "hooks",
+        "git",
+        "version-control"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:hooks-guide.md",
+      "type": "document",
+      "name": "hooks-guide.md",
+      "filePath": "hooks-guide.md",
+      "summary": "Practical, task-oriented guide to Claude Code hooks, walking through setting up a first hook and recipes for automating workflows (desktop notifications, auto-formatting after edits, blocking edits to protected files, context re-injection after compaction, config auditing, and auto-approving permission prompts). Also explains how hooks resolve, read input and return output, filter with matchers, and covers prompt-based, agent-based, and HTTP hook variants.",
+      "tags": [
+        "documentation",
+        "hooks",
+        "guide",
+        "automation",
+        "tutorial"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Markdown guide structured around concrete how-to recipes; 32 headings spanning setup, automation examples, hook mechanics, and troubleshooting."
+    },
+    {
+      "id": "document:hooks.md",
+      "type": "document",
+      "name": "hooks.md",
+      "filePath": "hooks.md",
+      "summary": "Comprehensive reference for the Claude Code hooks subsystem, documenting the full hook lifecycle, configuration schema (matcher patterns, handler fields, command/HTTP/MCP/prompt/agent hook types), input and output contracts (exit codes, JSON output, decision control), and exhaustive per-event specifications for every hook event (SessionStart, PreToolUse, PostToolUse, PermissionRequest, Stop, SubagentStart/Stop, Task lifecycle, Compact, SessionEnd, Elicitation, worktree and file-change events, and more). Closes with prompt/agent hooks, async background hooks, security considerations, and debugging.",
+      "tags": [
+        "documentation",
+        "hooks",
+        "reference",
+        "api-schema",
+        "lifecycle"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Large Markdown reference (~2900 lines, 142 headings); deeply nested heading hierarchy enumerates each hook event with its input, output, and decision-control schema."
+    }
+  ],
+  "edges": [
+    {
+      "source": "document:external/permission-modes.md",
+      "target": "document:external/permissions.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:external/permissions.md",
+      "target": "document:external/permission-modes.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:external/permissions.md",
+      "target": "document:external/settings.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:external/settings.md",
+      "target": "document:external/permissions.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:external/settings.md",
+      "target": "document:external/env-vars.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:external/debug-your-config.md",
+      "target": "document:external/settings.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:external/plugins.md",
+      "target": "document:external/plugins-reference.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:external/plugins-reference.md",
+      "target": "document:external/plugins.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:external/sub-agents.md",
+      "target": "document:external/agent-teams.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:external/agent-teams.md",
+      "target": "document:external/sub-agents.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:external/statusline.md",
+      "target": "document:external/sub-agents.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:external/model-config.md",
+      "target": "document:external/sub-agents.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:external/security-guidance.md",
+      "target": "document:external/plugins.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:external/headless.md",
+      "target": "document:external/goal.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:external/memory.md",
+      "target": "document:external/settings.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:hooks-guide.md",
+      "target": "document:hooks.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:hooks-guide.md",
+      "target": "document:external/permissions.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:hooks-guide.md",
+      "target": "document:external/permission-modes.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:hooks-guide.md",
+      "target": "document:external/settings.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:hooks-guide.md",
+      "target": "document:external/sub-agents.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:hooks.md",
+      "target": "document:external/permissions.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:hooks.md",
+      "target": "document:external/permission-modes.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:hooks.md",
+      "target": "document:external/settings.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:hooks.md",
+      "target": "document:external/mcp.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:hooks.md",
+      "target": "document:external/sub-agents.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:hooks.md",
+      "target": "document:external/skills.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:hooks.md",
+      "target": "document:external/worktrees.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:hooks.md",
+      "target": "document:external/security-guidance.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:hooks.md",
+      "target": "document:external/env-vars.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer:hooks-core",
+      "name": "Hooks Core",
+      "description": "The central hooks subsystem: the full lifecycle reference (event specs, matcher/handler schema, exit-code and JSON output contracts) plus the task-oriented guide for authoring command, prompt, agent, and HTTP hooks.",
+      "nodeIds": [
+        "document:hooks.md",
+        "document:hooks-guide.md"
+      ]
+    },
+    {
+      "id": "layer:permissions-security",
+      "name": "Permissions & Security",
+      "description": "Permission rule syntax and wildcards, the plan/auto/acceptEdits/bypass permission modes, and the hook-driven security-guidance checks that review edits, turns, and commits.",
+      "nodeIds": [
+        "document:external/permissions.md",
+        "document:external/permission-modes.md",
+        "document:external/security-guidance.md"
+      ]
+    },
+    {
+      "id": "layer:configuration",
+      "name": "Configuration",
+      "description": "Settings scopes and precedence, environment-variable resolution, CLAUDE.md and auto-memory rules, and model/effort/reasoning configuration that govern how hooks and the agent load.",
+      "nodeIds": [
+        "document:external/settings.md",
+        "document:external/env-vars.md",
+        "document:external/memory.md",
+        "document:external/model-config.md"
+      ]
+    },
+    {
+      "id": "layer:extensibility",
+      "name": "Extensibility — Plugins, Skills & MCP",
+      "description": "Packaging and extending Claude Code through plugins (intro and component reference), MCP server integration, and live-detected skills, including how each surfaces and reloads hooks.",
+      "nodeIds": [
+        "document:external/plugins.md",
+        "document:external/plugins-reference.md",
+        "document:external/mcp.md",
+        "document:external/skills.md"
+      ]
+    },
+    {
+      "id": "layer:agents-orchestration",
+      "name": "Agents & Orchestration",
+      "description": "Subagent definitions and frontmatter, agent-team task assign/claim and quality-gate flows, and subagent-aware status lines — the multi-agent coordination surface hooks fire against.",
+      "nodeIds": [
+        "document:external/sub-agents.md",
+        "document:external/agent-teams.md",
+        "document:external/statusline.md"
+      ]
+    },
+    {
+      "id": "layer:operations-debugging",
+      "name": "Operations & Debugging",
+      "description": "Running and troubleshooting Claude Code in practice: inspecting loaded context and resolved hooks, headless/-p automation, the goal-driven autonomous workflow, and worktree create/remove version-control hooks.",
+      "nodeIds": [
+        "document:external/debug-your-config.md",
+        "document:external/headless.md",
+        "document:external/goal.md",
+        "document:external/worktrees.md"
+      ]
+    }
+  ],
+  "tour": [
+    {
+      "order": 1,
+      "title": "Hooks: The Core Reference",
+      "description": "Start here — hooks are the reason this documentation set exists. This comprehensive reference defines the entire hooks subsystem: the lifecycle, the configuration schema (matcher patterns and handler fields), the input/output contracts (exit codes, JSON output, decision control), and an exhaustive per-event specification for every hook event from SessionStart through PreToolUse, PostToolUse, Stop, Compact, and SessionEnd. Every other document in this tour ultimately connects back to here, which is why it has by far the highest fan-out in the graph. Read it as the map of where Claude Code lets you intercept and shape behavior.",
+      "nodeIds": [
+        "document:hooks.md"
+      ],
+      "languageLesson": "Hooks return control through two channels: a process exit code (0 = allow, 2 = block with stderr fed back to the model, other = non-blocking error) and an optional structured JSON object on stdout for fine-grained decision control. Understanding this dual contract is the single most important concept in the whole subsystem."
+    },
+    {
+      "order": 2,
+      "title": "Authoring Your First Hook",
+      "description": "With the reference in hand, this task-oriented guide walks you from zero to a working hook and then through practical recipes: desktop notifications, auto-formatting after edits, blocking edits to protected files, re-injecting context after compaction, config auditing, and auto-approving permission prompts. It also explains how hooks resolve, how they read input and return output, and how matchers filter which events a hook sees. Together with Step 1 these two documents form the tightly-coupled hooks core — the guide teaches the patterns, the reference nails down the contract.",
+      "nodeIds": [
+        "document:hooks-guide.md"
+      ],
+      "languageLesson": "Beyond plain command hooks, Claude Code supports prompt-based, agent-based, and HTTP hook variants. A prompt hook asks the model a yes/no question, an agent hook spins up a subagent to judge, and an HTTP hook delegates to an external service — pick the variant by how much reasoning the decision needs."
+    },
+    {
+      "order": 3,
+      "title": "Permission Rules",
+      "description": "Hooks fire against a permission system, so this is the natural next layer. The permissions reference covers rule syntax and wildcards, tool-specific rules for Bash, PowerShell, Read/Edit, WebFetch, MCP, and Agent, plus how settings precedence resolves conflicting rules. Crucially, it documents how hooks extend permissions — the PreToolUse and PermissionRequest events from Step 1 are how you go beyond static allow/deny lists into dynamic, code-driven authorization. This document has one of the highest fan-in counts in the graph: many other topics depend on understanding it.",
+      "nodeIds": [
+        "document:external/permissions.md"
+      ]
+    },
+    {
+      "order": 4,
+      "title": "Permission Modes",
+      "description": "Building on the rule syntax from Step 3, permission modes set the overall posture for a session: plan, auto, acceptEdits, dontAsk, and bypassPermissions. This document explains how the auto-mode classifier blocks risky operations and falls back to prompting, how protected paths are enforced, and how to set a default mode. The permissions reference and this document form a mutually-linked pair — modes decide the baseline, rules and hooks refine it operation by operation.",
+      "nodeIds": [
+        "document:external/permission-modes.md"
+      ]
+    },
+    {
+      "order": 5,
+      "title": "Security Guidance Plugin",
+      "description": "This closes out the permissions-and-security layer by showing hooks applied to a real security workflow. The security-guidance plugin runs hook-driven checks on each file edit, at the end of every turn, and on each commit or push, and lets you add custom model-backed review rules and per-edit patterns. It is the canonical example of using the PostToolUse and Stop events from Step 1 to enforce quality and safety gates — and it previews the plugin-packaging story you will see in the extensibility layer.",
+      "nodeIds": [
+        "document:external/security-guidance.md"
+      ]
+    },
+    {
+      "order": 6,
+      "title": "Settings & Configuration Scopes",
+      "description": "Everything so far — hooks, permission rules, modes — is wired up through settings, making this the keystone of the configuration layer and the single highest fan-in document in the graph. It is the authoritative reference for configuration scopes and precedence, the settings files themselves, hook configuration, managed-settings policy helpers, sensitive-file exclusion, and the strictPluginOnlyCustomization control. When two configurations disagree, the precedence rules documented here decide the winner.",
+      "nodeIds": [
+        "document:external/settings.md"
+      ]
+    },
+    {
+      "order": 7,
+      "title": "Environment Variables & Memory",
+      "description": "These two documents round out configuration with the runtime context hooks inherit and the instructions the agent carries. The env-vars reference covers shell vs settings-file variables, their precedence, and the hook-relevant variables your scripts can read. The memory reference covers CLAUDE.md files vs auto-memory, where they live and how they load, organizing rules under .claude/rules/, the auto-memory trust gate, and even using a hook when Claude ignores CLAUDE.md — tying memory back to the hooks core.",
+      "nodeIds": [
+        "document:external/env-vars.md",
+        "document:external/memory.md"
+      ]
+    },
+    {
+      "order": 8,
+      "title": "Model Configuration",
+      "description": "The last configuration stop tunes the brain behind the agent. This reference lists the available models and aliases, how to set the model, the opusplan setting, how to adjust effort and reasoning levels, ultrathink and extended thinking, and the subagent-model environment variable. It matters for hooks indirectly: prompt and agent hooks (Step 2) invoke a model, and the subagent-model variable here governs the orchestration layer coming up next.",
+      "nodeIds": [
+        "document:external/model-config.md"
+      ]
+    },
+    {
+      "order": 9,
+      "title": "Extending with Plugins",
+      "description": "Now the tour shifts from configuring Claude Code to packaging and distributing those configurations. This grouped step pairs the introductory plugins guide — when to use plugins vs standalone config, plugin structure, local development and debugging, and migrating existing hooks into a plugin — with its component reference, which drills into hook and monitor components, installation scopes, the manifest schema, component path fields, and skills-directory reload behavior. These two are a tightly-coupled, mutually-linked pair: read the intro for the why, the reference for the exact schema.",
+      "nodeIds": [
+        "document:external/plugins.md",
+        "document:external/plugins-reference.md"
+      ],
+      "languageLesson": "Plugins are the recommended way to ship hooks at scale: instead of editing each user's settings.json, you bundle hooks, MCP servers, and skills into a versioned, installable package whose components surface and reload through the same hook lifecycle you learned in Step 1."
+    },
+    {
+      "order": 10,
+      "title": "MCP & Skills Integration",
+      "description": "Plugins are one extension surface; MCP servers and skills are the other two. The MCP excerpts cover adding local stdio servers, pushing messages over channels, plugin-provided MCP server environment variables, dynamic auth headers, elicitation requests, and using MCP prompts as commands — and hooks.md links directly here because hooks can gate and react to MCP tool calls. The skills excerpt covers live change detection, the frontmatter reference, and the skill content lifecycle, including how skill changes are detected and reloaded relative to hooks.",
+      "nodeIds": [
+        "document:external/mcp.md",
+        "document:external/skills.md"
+      ]
+    },
+    {
+      "order": 11,
+      "title": "Subagents & Agent Teams",
+      "description": "This grouped step covers the multi-agent coordination surface that hooks fire against. The subagents reference explains scope selection, supported frontmatter fields, conditional rules with hooks, and defining hooks both in subagent frontmatter and at project level for subagent events — with a database-query-validator example. Its mutually-linked companion, agent-teams, covers the task assign/claim flow, enforcing quality gates with hooks, and the lifecycle states hooks fire on. Together they show how the SubagentStart/Stop and Task-lifecycle events from Step 1 enable orchestration across many agents.",
+      "nodeIds": [
+        "document:external/sub-agents.md",
+        "document:external/agent-teams.md"
+      ]
+    },
+    {
+      "order": 12,
+      "title": "Status Lines",
+      "description": "The final orchestration stop is the observability surface a developer actually watches. The status-line guide explains how custom status lines work, the data available to status-line scripts (including context-window fields), subagent status lines, and hook-relevant troubleshooting. It links to subagents because each agent in a team can carry its own status line — making this where multi-agent state becomes visible at a glance.",
+      "nodeIds": [
+        "document:external/statusline.md"
+      ]
+    },
+    {
+      "order": 13,
+      "title": "Debugging Configuration",
+      "description": "The operations-and-debugging layer is the capstone: how you run and troubleshoot everything assembled in the previous twelve steps. This troubleshooting guide shows how to inspect what actually loaded into context, check resolved settings and hooks, test against a clean configuration, and diagnose the common config causes — the practical answer to 'my hook isn't firing.' It links straight back to the settings reference from Step 6, closing the loop between configuration and verification.",
+      "nodeIds": [
+        "document:external/debug-your-config.md"
+      ]
+    },
+    {
+      "order": 14,
+      "title": "Headless & Goal-Driven Automation",
+      "description": "Hooks shine in unattended runs, and these two linked documents cover that mode. The headless guide explains running Claude Code with the -p flag, bare mode for faster startup, auto-approving tools, permission behavior without a human, and the system/init event that reports plugin and hook load state. The goal-driven guide describes the autonomous workflow, how evaluation works, its requirements, and the non-interactive usage notes — exactly the context where your PreToolUse and Stop hooks become the only safety net.",
+      "nodeIds": [
+        "document:external/headless.md",
+        "document:external/goal.md"
+      ]
+    },
+    {
+      "order": 15,
+      "title": "Worktrees & VCS Hooks",
+      "description": "The tour ends where the version-control surface meets hooks. The worktrees guide covers starting Claude in a worktree, choosing the base branch, copying gitignored files, and — most relevant here — the WorktreeCreate and WorktreeRemove hooks that let you support non-git version control. It is a fitting close: these events, like every event in this tour, trace back to the hooks lifecycle reference in Step 1, showing how deeply hooks reach into Claude Code's operational fabric.",
+      "nodeIds": [
+        "document:external/worktrees.md"
+      ]
+    }
+  ]
+}

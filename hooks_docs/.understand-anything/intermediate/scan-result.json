@@ -1,0 +1,155 @@
+{
+  "name": "Claude Code Hooks Documentation",
+  "description": "A reference documentation collection for Claude Code hooks and configuration, covering hook events, the configuration schema, JSON input/output formats, and related topics such as permissions, settings, sub-agents, MCP, plugins, and skills.",
+  "languages": [
+    "markdown"
+  ],
+  "frameworks": [],
+  "files": [
+    {
+      "path": "external/agent-teams.md",
+      "language": "markdown",
+      "sizeLines": 59,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "external/debug-your-config.md",
+      "language": "markdown",
+      "sizeLines": 84,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "external/env-vars.md",
+      "language": "markdown",
+      "sizeLines": 85,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "external/goal.md",
+      "language": "markdown",
+      "sizeLines": 49,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "external/headless.md",
+      "language": "markdown",
+      "sizeLines": 77,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "external/mcp.md",
+      "language": "markdown",
+      "sizeLines": 144,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "external/memory.md",
+      "language": "markdown",
+      "sizeLines": 187,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "external/model-config.md",
+      "language": "markdown",
+      "sizeLines": 191,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "external/permission-modes.md",
+      "language": "markdown",
+      "sizeLines": 228,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "external/permissions.md",
+      "language": "markdown",
+      "sizeLines": 322,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "external/plugins-reference.md",
+      "language": "markdown",
+      "sizeLines": 342,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "external/plugins.md",
+      "language": "markdown",
+      "sizeLines": 109,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "external/security-guidance.md",
+      "language": "markdown",
+      "sizeLines": 114,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "external/settings.md",
+      "language": "markdown",
+      "sizeLines": 420,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "external/skills.md",
+      "language": "markdown",
+      "sizeLines": 39,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "external/statusline.md",
+      "language": "markdown",
+      "sizeLines": 234,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "external/sub-agents.md",
+      "language": "markdown",
+      "sizeLines": 292,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "external/worktrees.md",
+      "language": "markdown",
+      "sizeLines": 68,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "hooks-guide.md",
+      "language": "markdown",
+      "sizeLines": 965,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "hooks.md",
+      "language": "markdown",
+      "sizeLines": 2898,
+      "fileCategory": "docs"
+    }
+  ],
+  "totalFiles": 21,
+  "filteredByIgnore": 1,
+  "estimatedComplexity": "small",
+  "importMap": {
+    "external/agent-teams.md": [],
+    "external/debug-your-config.md": [],
+    "external/env-vars.md": [],
+    "external/goal.md": [],
+    "external/headless.md": [],
+    "external/mcp.md": [],
+    "external/memory.md": [],
+    "external/model-config.md": [],
+    "external/permission-modes.md": [],
+    "external/permissions.md": [],
+    "external/plugins-reference.md": [],
+    "external/plugins.md": [],
+    "external/security-guidance.md": [],
+    "external/settings.md": [],
+    "external/skills.md": [],
+    "external/statusline.md": [],
+    "external/sub-agents.md": [],
+    "external/worktrees.md": [],
+    "hooks-guide.md": [],
+    "hooks.md": []
+  }
+}
