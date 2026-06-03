@@ -6,11 +6,11 @@
 v-if="item.type === 'user' && item.message"
            class="p-3 rounded-lg bg-[var(--theme-bg-primary)] border border-[var(--theme-border-primary)]">
         <div class="flex items-start justify-between">
-          <div class="flex items-start space-x-3 flex-1">
+          <div class="flex items-start space-x-3 flex-1 min-w-0">
             <span class="text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0 bg-[var(--theme-accent-info)]/15 text-[var(--theme-accent-info)]">
               User
             </span>
-            <div class="flex-1">
+            <div class="flex-1 min-w-0">
               <!-- Handle string content -->
               <p
 v-if="typeof item.message.content === 'string'" 
@@ -31,7 +31,7 @@ v-if="content.type === 'text'"
 v-else-if="content.type === 'tool_result'"
                        class="bg-[var(--theme-surface-dark)] p-2.5 rounded-lg">
                     <span class="text-xs font-mono text-[var(--theme-on-dark-soft)]">Tool Result</span>
-                    <pre class="text-xs font-mono text-[var(--theme-on-dark)] mt-1 whitespace-pre-wrap">{{ content.content }}</pre>
+                    <pre class="text-xs font-mono text-[var(--theme-on-dark)] mt-1 whitespace-pre-wrap break-words">{{ content.content }}</pre>
                   </div>
                 </div>
               </div>
@@ -62,7 +62,7 @@ v-else-if="content.type === 'tool_result'"
         </div>
         <!-- Details Section -->
         <div v-if="isDetailsExpanded(index)" class="mt-3 p-3 bg-[var(--theme-surface-dark)] rounded-lg">
-          <pre class="text-xs font-mono text-[var(--theme-on-dark)] overflow-x-auto">{{ JSON.stringify(item, null, 2) }}</pre>
+          <pre class="text-xs font-mono text-[var(--theme-on-dark)] overflow-x-auto whitespace-pre-wrap break-words">{{ JSON.stringify(item, null, 2) }}</pre>
         </div>
       </div>
 
@@ -71,11 +71,11 @@ v-else-if="content.type === 'tool_result'"
 v-else-if="item.type === 'assistant' && item.message"
            class="p-3 rounded-lg bg-[var(--theme-bg-primary)] border border-[var(--theme-border-primary)]">
         <div class="flex items-start justify-between">
-          <div class="flex items-start space-x-3 flex-1">
+          <div class="flex items-start space-x-3 flex-1 min-w-0">
             <span class="text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0 bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-secondary)]">
               Assistant
             </span>
-            <div class="flex-1">
+            <div class="flex-1 min-w-0">
               <!-- Handle content array -->
               <div v-if="Array.isArray(item.message.content)" class="space-y-2">
                 <div v-for="(content, cIndex) in item.message.content" :key="cIndex">
@@ -93,7 +93,7 @@ v-else-if="content.type === 'tool_use'"
                       <Wrench :size="14" :stroke-width="1.75" class="text-[var(--theme-accent-amber)]" />
                       <span class="text-sm font-medium font-mono text-[var(--theme-accent-amber)]">{{ content.name }}</span>
                     </div>
-                    <pre class="text-xs font-mono text-[var(--theme-on-dark)] overflow-x-auto">{{ JSON.stringify(content.input, null, 2) }}</pre>
+                    <pre class="text-xs font-mono text-[var(--theme-on-dark)] overflow-x-auto whitespace-pre-wrap break-words">{{ JSON.stringify(content.input, null, 2) }}</pre>
                   </div>
                 </div>
               </div>
@@ -128,7 +128,7 @@ v-else-if="content.type === 'tool_use'"
         </div>
         <!-- Details Section -->
         <div v-if="isDetailsExpanded(index)" class="mt-3 p-3 bg-[var(--theme-surface-dark)] rounded-lg">
-          <pre class="text-xs font-mono text-[var(--theme-on-dark)] overflow-x-auto">{{ JSON.stringify(item, null, 2) }}</pre>
+          <pre class="text-xs font-mono text-[var(--theme-on-dark)] overflow-x-auto whitespace-pre-wrap break-words">{{ JSON.stringify(item, null, 2) }}</pre>
         </div>
       </div>
 
@@ -137,11 +137,11 @@ v-else-if="content.type === 'tool_use'"
 v-else-if="item.type === 'system'"
            class="p-3 rounded-lg bg-[var(--theme-bg-primary)] border border-[var(--theme-border-primary)]">
         <div class="flex items-start justify-between">
-          <div class="flex items-start space-x-3 flex-1">
+          <div class="flex items-start space-x-3 flex-1 min-w-0">
             <span class="text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0 bg-[var(--theme-accent-warning)]/15 text-[var(--theme-accent-warning)]">
               System
             </span>
-            <div class="flex-1">
+            <div class="flex-1 min-w-0">
               <p class="text-sm text-[var(--theme-text-secondary)] whitespace-pre-wrap leading-relaxed font-mono">
                 {{ cleanSystemContent(item.content || '') }}
               </p>
@@ -176,7 +176,7 @@ v-else-if="item.type === 'system'"
         </div>
         <!-- Details Section -->
         <div v-if="isDetailsExpanded(index)" class="mt-3 p-3 bg-[var(--theme-surface-dark)] rounded-lg">
-          <pre class="text-xs font-mono text-[var(--theme-on-dark)] overflow-x-auto">{{ JSON.stringify(item, null, 2) }}</pre>
+          <pre class="text-xs font-mono text-[var(--theme-on-dark)] overflow-x-auto whitespace-pre-wrap break-words">{{ JSON.stringify(item, null, 2) }}</pre>
         </div>
       </div>
 
@@ -185,13 +185,13 @@ v-else-if="item.type === 'system'"
 v-else-if="item.role"
            class="p-3 rounded-lg bg-[var(--theme-bg-primary)] border border-[var(--theme-border-primary)]">
         <div class="flex items-start justify-between">
-          <div class="flex items-start space-x-3 flex-1">
+          <div class="flex items-start space-x-3 flex-1 min-w-0">
             <span
 class="text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0"
                   :class="item.role === 'user' ? 'bg-[var(--theme-accent-info)]/15 text-[var(--theme-accent-info)]' : 'bg-[var(--theme-bg-tertiary)] text-[var(--theme-text-secondary)]'">
               {{ item.role === 'user' ? 'User' : 'Assistant' }}
             </span>
-            <div class="flex-1">
+            <div class="flex-1 min-w-0">
               <p class="text-sm text-[var(--theme-text-primary)] whitespace-pre-wrap leading-relaxed">
                 {{ item.content }}
               </p>
@@ -218,7 +218,7 @@ class="text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0"
         </div>
         <!-- Details Section -->
         <div v-if="isDetailsExpanded(index)" class="mt-3 p-3 bg-[var(--theme-surface-dark)] rounded-lg">
-          <pre class="text-xs font-mono text-[var(--theme-on-dark)] overflow-x-auto">{{ JSON.stringify(item, null, 2) }}</pre>
+          <pre class="text-xs font-mono text-[var(--theme-on-dark)] overflow-x-auto whitespace-pre-wrap break-words">{{ JSON.stringify(item, null, 2) }}</pre>
         </div>
       </div>
     </div>
@@ -251,14 +251,14 @@ const isDetailsExpanded = (index: number) => {
 };
 
 const chatItems = computed(() => {
-  // Handle both simple chat format and complex claude-code format
-  if (props.chat.length > 0 && props.chat[0].type) {
-    // Complex format from chat.json
-    return props.chat;
-  } else {
-    // Simple format with role/content
-    return props.chat;
+  // Render in wall-clock order. The transcript active-path order jumps at the
+  // /compact boundary (the summary node is written with a later timestamp than
+  // the command that triggered it), so sort by timestamp when every item has
+  // one; otherwise (simple role/content format) leave the order untouched.
+  if (props.chat.length > 0 && props.chat.every((i) => i.timestamp)) {
+    return [...props.chat].sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp));
   }
+  return props.chat;
 });
 
 const formatTimestamp = (timestamp: string) => {
