@@ -409,10 +409,18 @@ const matchesFilters = (item: ChatItem): boolean => {
     if (item.content.includes('Running') && activeFilters.value.includes('Running')) {
       return true;
     }
-    // Check for specific tool names in system messages
-    const toolNames = ['Read', 'Write', 'Edit', 'Glob'];
-    for (const tool of toolNames) {
-      if (item.content.includes(tool) && activeFilters.value.includes(tool)) {
+    // Match any active tool-name filter mentioned in the system message text
+    // (chips are data-driven, so this can't be a fixed list of tool names).
+    const baseTypes = new Set([
+      'user',
+      'assistant',
+      'system',
+      'tool_use',
+      'tool_result',
+      MCP_FILTER,
+    ]);
+    for (const f of activeFilters.value) {
+      if (!baseTypes.has(f) && item.content.includes(f)) {
         return true;
       }
     }

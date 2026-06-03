@@ -7,4 +7,15 @@ import MarkdownIt from 'markdown-it';
 // whitespace-pre-wrap feel.
 const md = new MarkdownIt({ html: false, linkify: true, breaks: true });
 
+// Open links in a new tab so clicking a transcript link doesn't navigate the
+// dashboard away; rel guards against tab-nabbing / SEO leakage.
+const defaultLinkOpen =
+  md.renderer.rules.link_open ||
+  ((tokens, idx, options, _env, self) => self.renderToken(tokens, idx, options));
+md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+  tokens[idx].attrSet('target', '_blank');
+  tokens[idx].attrSet('rel', 'noopener nofollow');
+  return defaultLinkOpen(tokens, idx, options, env, self);
+};
+
 export const renderMarkdown = (text: string): string => md.render(text ?? '');

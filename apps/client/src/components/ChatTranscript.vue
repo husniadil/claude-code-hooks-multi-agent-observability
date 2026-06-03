@@ -26,7 +26,7 @@ v-if="item.type === 'user' && item.message"
 v-else-if="content.type === 'tool_result'"
                        class="bg-[var(--theme-surface-dark)] p-2.5 rounded-lg">
                     <span class="text-xs font-mono text-[var(--theme-on-dark-soft)]">Tool Result</span>
-                    <pre class="text-xs font-mono text-[var(--theme-on-dark)] mt-1 whitespace-pre-wrap break-words">{{ content.content }}</pre>
+                    <pre class="text-xs font-mono text-[var(--theme-on-dark)] mt-1 whitespace-pre-wrap break-words">{{ blockText(content) }}</pre>
                   </div>
                 </div>
               </div>
@@ -108,6 +108,11 @@ v-else-if="content.type === 'tool_result' || content.type === 'advisor_tool_resu
                   </div>
                 </div>
               </div>
+              <!-- String content fallback (rendered as markdown) -->
+              <MarkdownText
+                v-else-if="typeof item.message.content === 'string'"
+                :text="item.message.content"
+              />
               <!-- Usage info -->
               <div v-if="item.message.usage" class="mt-2 text-xs text-[var(--theme-text-quaternary)]">
                 Tokens: {{ item.message.usage.input_tokens }} in / {{ item.message.usage.output_tokens }} out
@@ -282,6 +287,11 @@ const formatTimestamp = (timestamp: string) => {
 const blockText = (block: ChatContentBlock): string => {
   const c = block.content;
   if (typeof c === 'string') return c;
+  if (Array.isArray(c)) {
+    return c
+      .map((b) => (typeof b === 'string' ? b : typeof b?.text === 'string' ? b.text : JSON.stringify(b)))
+      .join('\n');
+  }
   if (c && typeof c === 'object') {
     const t = (c as { text?: unknown }).text;
     if (typeof t === 'string') return t;
