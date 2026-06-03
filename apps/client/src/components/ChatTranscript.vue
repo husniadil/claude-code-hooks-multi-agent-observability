@@ -98,15 +98,22 @@ v-if="content.type === 'text'"
                       {{ content.thinking }}
                     </p>
                   </div>
-                  <!-- Tool use -->
+                  <!-- Tool use (incl. server-side tools) -->
                   <div
-v-else-if="content.type === 'tool_use'"
+v-else-if="content.type === 'tool_use' || content.type === 'server_tool_use'"
                        class="bg-[var(--theme-surface-dark)] p-3 rounded-lg">
                     <div class="flex items-center gap-2 mb-2">
                       <Wrench :size="14" :stroke-width="1.75" class="text-[var(--theme-accent-amber)]" />
                       <span class="text-sm font-medium font-mono text-[var(--theme-accent-amber)]">{{ content.name }}</span>
                     </div>
                     <pre class="text-xs font-mono text-[var(--theme-on-dark)] overflow-x-auto whitespace-pre-wrap break-words">{{ JSON.stringify(content.input, null, 2) }}</pre>
+                  </div>
+                  <!-- Tool result (incl. advisor server result) -->
+                  <div
+v-else-if="content.type === 'tool_result' || content.type === 'advisor_tool_result'"
+                       class="bg-[var(--theme-surface-dark)] p-2.5 rounded-lg">
+                    <span class="text-xs font-mono text-[var(--theme-on-dark-soft)]">Tool Result</span>
+                    <pre class="text-xs font-mono text-[var(--theme-on-dark)] mt-1 whitespace-pre-wrap break-words">{{ blockText(content) }}</pre>
                   </div>
                 </div>
               </div>
@@ -241,7 +248,7 @@ class="text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0"
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { Wrench, Brain } from 'lucide-vue-next';
-import type { ChatItem } from '../types/chat';
+import type { ChatItem, ChatContentBlock } from '../types/chat';
 
 const props = defineProps<{
   chat: ChatItem[];
@@ -278,6 +285,18 @@ const chatItems = computed(() => {
 const formatTimestamp = (timestamp: string) => {
   const date = new Date(timestamp);
   return date.toLocaleTimeString();
+};
+
+// Tool-result content is sometimes a string, sometimes an object ({ text } for
+// advisor results). Surface the human-readable text, JSON-dumping anything else.
+const blockText = (block: ChatContentBlock): string => {
+  const c = block.content;
+  if (typeof c === 'string') return c;
+  if (c && typeof c === 'object') {
+    const t = (c as { text?: unknown }).text;
+    if (typeof t === 'string') return t;
+  }
+  return JSON.stringify(c, null, 2);
 };
 
 // const cleanContent = (content: string) => {
