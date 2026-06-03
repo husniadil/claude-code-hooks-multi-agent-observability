@@ -86,29 +86,36 @@
               </button>
             </div>
 
-            <!-- Filters -->
-            <div
-              class="flex flex-wrap gap-1.5 max-h-24 mobile:max-h-28 overflow-y-auto mobile:overflow-x-auto"
-            >
-              <button
-                v-for="filter in filters"
-                :key="filter.type"
-                class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-colors whitespace-nowrap border"
-                :class="
-                  activeFilters.includes(filter.type)
-                    ? 'bg-[var(--theme-text-primary)] text-[var(--theme-bg-primary)] border-[var(--theme-text-primary)]'
-                    : 'text-[var(--theme-text-tertiary)] border-[var(--theme-border-primary)] hover:bg-[var(--theme-hover-bg)] hover:text-[var(--theme-text-primary)]'
-                "
-                @click="toggleFilter(filter.type)"
-              >
-                <component :is="filter.icon" :size="13" :stroke-width="1.75" />
-                {{ filter.label }}
-              </button>
+            <!-- Filters (grouped by level: Messages / Content / Tools) -->
+            <div class="flex flex-col gap-2 max-h-40 mobile:max-h-44 overflow-y-auto">
+              <div v-for="group in filterGroups" :key="group.label" class="flex flex-col gap-1">
+                <span
+                  class="text-[10px] font-semibold uppercase tracking-wider text-[var(--theme-text-quaternary)]"
+                >
+                  {{ group.label }}
+                </span>
+                <div class="flex flex-wrap gap-1.5">
+                  <button
+                    v-for="filter in group.filters"
+                    :key="filter.type"
+                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-colors whitespace-nowrap border"
+                    :class="
+                      activeFilters.includes(filter.type)
+                        ? 'bg-[var(--theme-text-primary)] text-[var(--theme-bg-primary)] border-[var(--theme-text-primary)]'
+                        : 'text-[var(--theme-text-tertiary)] border-[var(--theme-border-primary)] hover:bg-[var(--theme-hover-bg)] hover:text-[var(--theme-text-primary)]'
+                    "
+                    @click="toggleFilter(filter.type)"
+                  >
+                    <component :is="filter.icon" :size="13" :stroke-width="1.75" />
+                    {{ filter.label }}
+                  </button>
+                </div>
+              </div>
 
               <!-- Clear Filters -->
               <button
                 v-if="searchQuery || activeSearchQuery || activeFilters.length > 0"
-                class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium text-[var(--theme-accent-error)] border border-[var(--theme-accent-error)]/40 hover:bg-[var(--theme-accent-error)]/10 whitespace-nowrap"
+                class="self-start inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium text-[var(--theme-accent-error)] border border-[var(--theme-accent-error)]/40 hover:bg-[var(--theme-accent-error)]/10 whitespace-nowrap"
                 @click="clearSearch"
               >
                 <X :size="12" :stroke-width="2" /> Clear
@@ -143,8 +150,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, type Component } from 'vue';
 import ChatTranscript from './ChatTranscript.vue';
+import type { ChatItem } from '../types/chat';
 import { useModalA11y } from '../composables/useModalA11y';
 import {
   MessageSquare,
@@ -161,11 +169,15 @@ import {
   PenLine,
   Pencil,
   FileSearch,
+  Terminal,
+  Globe,
+  ListChecks,
+  Plug,
 } from 'lucide-vue-next';
 
 const props = defineProps<{
   isOpen: boolean;
-  chat: any[];
+  chat: ChatItem[];
 }>();
 
 const emit = defineEmits<{
@@ -177,22 +189,80 @@ const activeSearchQuery = ref('');
 const activeFilters = ref<string[]>([]);
 const copiedAll = ref(false);
 
-const filters = [
-  // Message types
+// Sentinel filter type that collapses every mcp__* tool into one "MCP" chip.
+const MCP_FILTER = '__mcp__';
+
+const MESSAGE_FILTERS = [
   { type: 'user', label: 'User', icon: User },
   { type: 'assistant', label: 'Assistant', icon: Bot },
   { type: 'system', label: 'System', icon: Settings },
+];
 
-  // Tool actions
+const CONTENT_FILTERS = [
   { type: 'tool_use', label: 'Tool Use', icon: Wrench },
   { type: 'tool_result', label: 'Tool Result', icon: CircleCheck },
-
-  // Specific tools
-  { type: 'Read', label: 'Read', icon: BookOpen },
-  { type: 'Write', label: 'Write', icon: PenLine },
-  { type: 'Edit', label: 'Edit', icon: Pencil },
-  { type: 'Glob', label: 'Glob', icon: FileSearch },
 ];
+
+const TOOL_ICONS: Record<string, Component> = {
+  Read: BookOpen,
+  Write: PenLine,
+  Edit: Pencil,
+  MultiEdit: Pencil,
+  NotebookEdit: Pencil,
+  Glob: FileSearch,
+  Grep: Search,
+  ToolSearch: Search,
+  WebSearch: Search,
+  WebFetch: Globe,
+  Bash: Terminal,
+  Task: Bot,
+  TodoWrite: ListChecks,
+};
+
+// Filter chips derived from the actual transcript: a group is only shown when it
+// has at least one matching message, so e.g. Glob never appears if it was unused.
+const filterGroups = computed(() => {
+  const present = new Set<string>();
+  const toolNames = new Set<string>();
+  let hasMcp = false;
+
+  for (const item of props.chat) {
+    if (item.type === 'user' || item.role === 'user') present.add('user');
+    if (item.type === 'assistant' || item.role === 'assistant') present.add('assistant');
+    if (item.type === 'system') present.add('system');
+
+    const content = item.message?.content;
+    if (Array.isArray(content)) {
+      for (const block of content) {
+        if (block.type === 'tool_use') {
+          present.add('tool_use');
+          if (typeof block.name === 'string') {
+            if (block.name.startsWith('mcp__')) hasMcp = true;
+            else toolNames.add(block.name);
+          }
+        } else if (block.type === 'tool_result') {
+          present.add('tool_result');
+        }
+      }
+    }
+  }
+
+  const groups = [];
+
+  const messages = MESSAGE_FILTERS.filter((f) => present.has(f.type));
+  if (messages.length) groups.push({ label: 'Messages', filters: messages });
+
+  const contentTypes = CONTENT_FILTERS.filter((f) => present.has(f.type));
+  if (contentTypes.length) groups.push({ label: 'Content', filters: contentTypes });
+
+  const tools = [...toolNames]
+    .sort()
+    .map((name) => ({ type: name, label: name, icon: TOOL_ICONS[name] || Wrench }));
+  if (hasMcp) tools.push({ type: MCP_FILTER, label: 'MCP', icon: Plug });
+  if (tools.length) groups.push({ label: 'Tools', filters: tools });
+
+  return groups;
+});
 
 const toggleFilter = (type: string) => {
   const index = activeFilters.value.indexOf(type);
@@ -235,7 +305,7 @@ const copyAllMessages = async () => {
   }
 };
 
-const matchesSearch = (item: any, query: string): boolean => {
+const matchesSearch = (item: ChatItem, query: string): boolean => {
   const lowerQuery = query.toLowerCase().trim();
 
   // Check direct content (for system messages and simple chat)
@@ -315,7 +385,7 @@ const matchesSearch = (item: any, query: string): boolean => {
   return false;
 };
 
-const matchesFilters = (item: any): boolean => {
+const matchesFilters = (item: ChatItem): boolean => {
   if (activeFilters.value.length === 0) return true;
 
   // Check message type
@@ -369,6 +439,14 @@ const matchesFilters = (item: any): boolean => {
         }
         // Check for specific tool names
         if (content.name && activeFilters.value.includes(content.name)) {
+          return true;
+        }
+        // Collapsed MCP chip matches any mcp__* tool
+        if (
+          typeof content.name === 'string' &&
+          content.name.startsWith('mcp__') &&
+          activeFilters.value.includes(MCP_FILTER)
+        ) {
           return true;
         }
       }

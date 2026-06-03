@@ -45,7 +45,7 @@ v-else-if="content.type === 'tool_result'"
           <div class="flex items-center space-x-1 ml-2">
             <!-- Show Details Button -->
             <button
-              class="px-2 py-1 text-xs font-medium text-[var(--theme-text-tertiary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] rounded transition-colors"
+              class="px-2 py-1 text-xs font-medium text-center min-w-[6rem] text-[var(--theme-text-tertiary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] rounded transition-colors"
               @click="toggleDetails(index)"
             >
               {{ isDetailsExpanded(index) ? 'Hide' : 'Show' }} Details
@@ -111,7 +111,7 @@ v-else-if="content.type === 'tool_use'"
           <div class="flex items-center space-x-1 ml-2">
             <!-- Show Details Button -->
             <button
-              class="px-2 py-1 text-xs font-medium text-[var(--theme-text-tertiary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] rounded transition-colors"
+              class="px-2 py-1 text-xs font-medium text-center min-w-[6rem] text-[var(--theme-text-tertiary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] rounded transition-colors"
               @click="toggleDetails(index)"
             >
               {{ isDetailsExpanded(index) ? 'Hide' : 'Show' }} Details
@@ -159,7 +159,7 @@ v-else-if="item.type === 'system'"
           <div class="flex items-center space-x-1 ml-2">
             <!-- Show Details Button -->
             <button
-              class="px-2 py-1 text-xs font-medium text-[var(--theme-text-tertiary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] rounded transition-colors"
+              class="px-2 py-1 text-xs font-medium text-center min-w-[6rem] text-[var(--theme-text-tertiary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] rounded transition-colors"
               @click="toggleDetails(index)"
             >
               {{ isDetailsExpanded(index) ? 'Hide' : 'Show' }} Details
@@ -201,7 +201,7 @@ class="text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0"
           <div class="flex items-center space-x-1 ml-2">
             <!-- Show Details Button -->
             <button
-              class="px-2 py-1 text-xs font-medium text-[var(--theme-text-tertiary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] rounded transition-colors"
+              class="px-2 py-1 text-xs font-medium text-center min-w-[6rem] text-[var(--theme-text-tertiary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-hover-bg)] rounded transition-colors"
               @click="toggleDetails(index)"
             >
               {{ isDetailsExpanded(index) ? 'Hide' : 'Show' }} Details
@@ -228,9 +228,10 @@ class="text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0"
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { Wrench } from 'lucide-vue-next';
+import type { ChatItem } from '../types/chat';
 
 const props = defineProps<{
-  chat: any[];
+  chat: ChatItem[];
 }>();
 
 // Track which items have details expanded
@@ -256,7 +257,7 @@ const chatItems = computed(() => {
   // the command that triggered it), so sort by timestamp when every item has
   // one; otherwise (simple role/content format) leave the order untouched.
   if (props.chat.length > 0 && props.chat.every((i) => i.timestamp)) {
-    return [...props.chat].sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp));
+    return [...props.chat].sort((a, b) => Date.parse(a.timestamp ?? '') - Date.parse(b.timestamp ?? ''));
   }
   return props.chat;
 });
