@@ -14,6 +14,8 @@ import subprocess
 from pathlib import Path
 from datetime import datetime
 
+from utils.paths import project_dir
+
 try:
     from dotenv import load_dotenv
     load_dotenv()
@@ -24,7 +26,7 @@ except ImportError:
 def log_session_start(input_data):
     """Log session start event to logs directory."""
     # Ensure logs directory exists
-    log_dir = Path("logs")
+    log_dir = project_dir() / "logs"
     log_dir.mkdir(parents=True, exist_ok=True)
     log_file = log_dir / 'session_start.json'
 

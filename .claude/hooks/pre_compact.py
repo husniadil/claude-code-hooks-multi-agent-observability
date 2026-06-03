@@ -13,6 +13,8 @@ import sys
 from pathlib import Path
 from datetime import datetime
 
+from utils.paths import project_dir
+
 try:
     from dotenv import load_dotenv
     load_dotenv()
@@ -23,7 +25,7 @@ except ImportError:
 def log_pre_compact(input_data, custom_instructions):
     """Log pre-compact event to logs directory."""
     # Ensure logs directory exists
-    log_dir = Path("logs")
+    log_dir = project_dir() / "logs"
     log_dir.mkdir(parents=True, exist_ok=True)
     log_file = log_dir / 'pre_compact.json'
 
@@ -58,7 +60,7 @@ def backup_transcript(transcript_path, trigger, custom_instructions=""):
             return
 
         # Create backup directory
-        backup_dir = Path("logs") / "transcript_backups"
+        backup_dir = project_dir() / "logs" / "transcript_backups"
         backup_dir.mkdir(parents=True, exist_ok=True)
 
         # Generate backup filename with timestamp, trigger type, and custom_instructions

@@ -13,6 +13,8 @@ import sys
 from pathlib import Path
 from datetime import datetime
 
+from utils.paths import project_dir
+
 try:
     from dotenv import load_dotenv
 
@@ -24,7 +26,7 @@ except ImportError:
 def log_user_prompt(session_id, input_data):
     """Log user prompt to logs directory."""
     # Ensure logs directory exists
-    log_dir = Path("logs")
+    log_dir = project_dir() / "logs"
     log_dir.mkdir(parents=True, exist_ok=True)
     log_file = log_dir / "user_prompt_submit.json"
 
@@ -51,7 +53,7 @@ def manage_session_data(session_id, prompt, name_agent=False):
     import subprocess
 
     # Ensure sessions directory exists
-    sessions_dir = Path(".claude/data/sessions")
+    sessions_dir = project_dir() / ".claude/data/sessions"
     sessions_dir.mkdir(parents=True, exist_ok=True)
 
     # Load or create session file
