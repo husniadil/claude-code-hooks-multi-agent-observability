@@ -11,21 +11,16 @@ v-if="item.type === 'user' && item.message"
               User
             </span>
             <div class="flex-1 min-w-0">
-              <!-- Handle string content -->
-              <p
-v-if="typeof item.message.content === 'string'" 
-                 class="text-sm text-[var(--theme-text-primary)] whitespace-pre-wrap leading-relaxed">
-                {{ item.message.content.includes('<command-') ? cleanCommandContent(item.message.content) : item.message.content }}
-              </p>
+              <!-- Handle string content (rendered as markdown) -->
+              <MarkdownText
+                v-if="typeof item.message.content === 'string'"
+                :text="item.message.content.includes('<command-') ? cleanCommandContent(item.message.content) : item.message.content"
+              />
               <!-- Handle array content -->
               <div v-else-if="Array.isArray(item.message.content)" class="space-y-2">
                 <div v-for="(content, cIndex) in item.message.content" :key="cIndex">
-                  <!-- Text content -->
-                  <p
-v-if="content.type === 'text'" 
-                     class="text-sm text-[var(--theme-text-primary)] whitespace-pre-wrap leading-relaxed">
-                    {{ content.text }}
-                  </p>
+                  <!-- Text content (rendered as markdown) -->
+                  <MarkdownText v-if="content.type === 'text'" :text="content.text || ''" />
                   <!-- Tool result -->
                   <div
 v-else-if="content.type === 'tool_result'"
@@ -79,12 +74,8 @@ v-else-if="item.type === 'assistant' && item.message"
               <!-- Handle content array -->
               <div v-if="Array.isArray(item.message.content)" class="space-y-2">
                 <div v-for="(content, cIndex) in item.message.content" :key="cIndex">
-                  <!-- Text content -->
-                  <p
-v-if="content.type === 'text'"
-                     class="text-sm text-[var(--theme-text-primary)] whitespace-pre-wrap leading-relaxed">
-                    {{ content.text }}
-                  </p>
+                  <!-- Text content (rendered as markdown) -->
+                  <MarkdownText v-if="content.type === 'text'" :text="content.text || ''" />
                   <!-- Thinking content -->
                   <div
                     v-else-if="content.type === 'thinking'"
@@ -212,9 +203,7 @@ class="text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0"
               {{ item.role === 'user' ? 'User' : 'Assistant' }}
             </span>
             <div class="flex-1 min-w-0">
-              <p class="text-sm text-[var(--theme-text-primary)] whitespace-pre-wrap leading-relaxed">
-                {{ item.content }}
-              </p>
+              <MarkdownText :text="item.content || ''" />
             </div>
           </div>
           <!-- Action Buttons -->
@@ -248,6 +237,7 @@ class="text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0"
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { Wrench, Brain } from 'lucide-vue-next';
+import MarkdownText from './MarkdownText.vue';
 import type { ChatItem, ChatContentBlock } from '../types/chat';
 
 const props = defineProps<{
