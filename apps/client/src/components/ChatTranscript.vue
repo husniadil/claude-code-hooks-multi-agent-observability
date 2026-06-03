@@ -81,10 +81,23 @@ v-else-if="item.type === 'assistant' && item.message"
                 <div v-for="(content, cIndex) in item.message.content" :key="cIndex">
                   <!-- Text content -->
                   <p
-v-if="content.type === 'text'" 
+v-if="content.type === 'text'"
                      class="text-sm text-[var(--theme-text-primary)] whitespace-pre-wrap leading-relaxed">
                     {{ content.text }}
                   </p>
+                  <!-- Thinking content -->
+                  <div
+                    v-else-if="content.type === 'thinking'"
+                    class="border-l-2 border-[var(--theme-border-secondary)] pl-3 py-0.5"
+                  >
+                    <div class="flex items-center gap-1.5 mb-1">
+                      <Brain :size="13" :stroke-width="1.75" class="text-[var(--theme-text-quaternary)]" />
+                      <span class="text-xs font-medium uppercase tracking-wide text-[var(--theme-text-quaternary)]">Thinking</span>
+                    </div>
+                    <p class="text-sm italic text-[var(--theme-text-tertiary)] whitespace-pre-wrap leading-relaxed break-words">
+                      {{ content.thinking }}
+                    </p>
+                  </div>
                   <!-- Tool use -->
                   <div
 v-else-if="content.type === 'tool_use'"
@@ -227,7 +240,7 @@ class="text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0"
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { Wrench } from 'lucide-vue-next';
+import { Wrench, Brain } from 'lucide-vue-next';
 import type { ChatItem } from '../types/chat';
 
 const props = defineProps<{
